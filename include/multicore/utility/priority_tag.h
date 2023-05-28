@@ -26,13 +26,17 @@
 
 namespace mtc {
 
-/// @brief A tag type used as a parameter in functions to use in overload resolution.
-/// @details Higher priority tags are preferred over lower priority tags in overload resolution.
-/// \tparam N The priority of the tag.
+/**
+ * @brief A tag type used as a parameter in functions to use in overload resolution.
+ * @details Higher priority tags are preferred over lower priority tags in overload resolution.
+ * @tparam N The priority of the tag.
+ */
 template <decltype(sizeof(void*)) N>
 struct priority_tag : priority_tag<N - 1> {};
 
-/// @private
+/**
+ * @private
+ */
 template <>
 struct priority_tag<0> {};
 

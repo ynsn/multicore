@@ -24,7 +24,9 @@
 #ifndef MULTICORE_FORWARD_H
 #define MULTICORE_FORWARD_H
 
-// Use MTC_FWD(t) instead of std::forward<T>(t) to improve compile times. Does the same as std::forward<T>(t).
-#define MTC_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
+/**
+ * @brief Use MTC_FWD(t) instead of std::forward<T>(t) to improve compile times. Does the same as std::forward<T>(t).
+ */
+#define MTC_FWD(...) ((decltype(__VA_ARGS__)&&)__VA_ARGS__)
 
 #endif  // MULTICORE_FORWARD_H
