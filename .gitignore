@@ -154,3 +154,4 @@ fabric.properties
 ### Project-specific ignores
 build/
 .PVS-Studio
+docs/out/

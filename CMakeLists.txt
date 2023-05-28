@@ -7,11 +7,13 @@ project(multicore
         VERSION 0.0.1
         DESCRIPTION "Multicore Library")
 
-set(CMAKE_CXX_STANDARD 20)
-
 option(MTC_ENABLE_TESTS "Builds the tests" ON)
+option(MTC_ENABLE_DOCS "Generates the Doxygen documentation" ON)
 
 message(STATUS "Enabled tests: ${MTC_ENABLE_TESTS}")
+message(STATUS "Enabled docs: ${MTC_ENABLE_DOCS}")
+
+set(CMAKE_CXX_STANDARD 20)
 
 if (MTC_ENABLE_TESTS)
     FetchContent_Declare(
@@ -30,6 +32,22 @@ if (MTC_ENABLE_TESTS)
     catch_discover_tests(tests)
 endif ()
 
+if (MTC_ENABLE_DOCS)
+    find_package(Doxygen)
+    if (DOXYGEN_FOUND)
+        message(STATUS "Doxygen found, building docs is supported")
+        set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/docs/Doxyfile.in)
+        set(DOXYGEN_OUT ${CMAKE_SOURCE_DIR}/docs/out/Doxyfile)
+        configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
 
+        add_custom_target(multicore_docs ALL
+                COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/out/docs
+                COMMENT "Generating API documentation with Doxygen"
+                VERBATIM)
+    else ()
+        message(FATAL_ERROR "Doxygen not found, building docs is not supported")
+    endif ()
+endif ()
 
 
