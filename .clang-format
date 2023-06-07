@@ -1,4 +1,4 @@
 BasedOnStyle: Google
-ColumnLimit: 130
+ColumnLimit: 135
 
 NamespaceIndentation: Inner
