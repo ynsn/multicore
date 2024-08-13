@@ -27,13 +27,21 @@ var NAVTREE =
   [ "Multicore", "index.html", [
     [ "Todo List", "todo.html", null ],
     [ "Topics", "topics.html", "topics" ],
-    [ "Concepts", "concepts.html", "concepts" ]
+    [ "Concepts", "concepts.html", "concepts" ],
+    [ "Classes", "annotated.html", [
+      [ "Class List", "annotated.html", "annotated_dup" ],
+      [ "Class Index", "classes.html", null ],
+      [ "Class Members", "functions.html", [
+        [ "All", "functions.html", null ],
+        [ "Typedefs", "functions_type.html", null ]
+      ] ]
+    ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"conceptmtc_1_1awaiter.html"
+"annotated.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
