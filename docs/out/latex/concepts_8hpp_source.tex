@@ -33,67 +33,83 @@
 \DoxyCodeLine{00029\ \textcolor{preprocessor}{\#ifndef\ MTC\_CONCEPTS\_HPP}}
 \DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ MTC\_CONCEPTS\_HPP}}
 \DoxyCodeLine{00031\ }
-\DoxyCodeLine{00032\ \textcolor{keyword}{namespace\ }mtc\ \{}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}utility.hpp"{}}}
 \DoxyCodeLine{00033\ }
-\DoxyCodeLine{00039\ \ \ \textcolor{keyword}{namespace\ }detail\ \{}
-\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T,\ \textcolor{keyword}{class}\ U>}
-\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ is\_same\_v\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ is\_same\_v<T,\ T>\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{00044\ \ \ \}\ \ \textcolor{comment}{//\ namespace\ detail}}
-\DoxyCodeLine{00045\ }
-\DoxyCodeLine{00050\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ A,\ \textcolor{keyword}{class}\ B>}
-\DoxyCodeLine{00051\ \ \ \textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1same__as}{same\_as}}\ =\ detail::is\_same\_v<A,\ B>;}
-\DoxyCodeLine{00052\ }
-\DoxyCodeLine{00053\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00054\ \ \ \textcolor{keyword}{concept\ }destructible\ =\ \_\_is\_nothrow\_destructible(T);}
-\DoxyCodeLine{00055\ }
-\DoxyCodeLine{00056\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00057\ \ \ \textcolor{keyword}{concept\ }default\_constructible\ =\ \_\_is\_constructible(T);}
+\DoxyCodeLine{00034\ \textcolor{keyword}{namespace\ }mtc\ \{}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00041\ \ \ \textcolor{keyword}{namespace\ }detail\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T,\ \textcolor{keyword}{class}\ U>}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ is\_same\_v\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ is\_same\_v<T,\ T>\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00046\ \ \ \}\ \ \textcolor{comment}{//\ namespace\ detail}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00052\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ A,\ \textcolor{keyword}{class}\ B>}
+\DoxyCodeLine{00053\ \ \ \textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1same__as}{same\_as}}\ =\ detail::is\_same\_v<A,\ B>;}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00056\ \ \ \textcolor{keyword}{concept\ }destructible\ =\ \_\_is\_nothrow\_destructible(T);}
+\DoxyCodeLine{00057\ }
 \DoxyCodeLine{00058\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00059\ \ \ \textcolor{keyword}{concept\ }nothrow\_default\_constructible\ =\ \_\_is\_nothrow\_constructible(T);}
-\DoxyCodeLine{00060\ }
-\DoxyCodeLine{00061\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }T,\ \textcolor{keyword}{class}...\ Args>}
-\DoxyCodeLine{00062\ \ \ \textcolor{keyword}{concept\ }constructible\_from\ =\ destructible<T>\ \&\&\ \_\_is\_constructible(T,\ Args...);}
+\DoxyCodeLine{00059\ \ \ \textcolor{keyword}{concept\ }default\_constructible\ =\ \_\_is\_constructible(T);}
+\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00061\ \ \ \textcolor{keyword}{concept\ }nothrow\_default\_constructible\ =\ \_\_is\_nothrow\_constructible(T);}
+\DoxyCodeLine{00062\ }
 \DoxyCodeLine{00063\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }T,\ \textcolor{keyword}{class}...\ Args>}
-\DoxyCodeLine{00064\ \ \ \textcolor{keyword}{concept\ }nothrow\_constructible\_from\ =\ destructible<T>\ \&\&\ \_\_is\_nothrow\_constructible(T,\ Args...);}
-\DoxyCodeLine{00065\ }
-\DoxyCodeLine{00066\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00067\ \ \ \textcolor{keyword}{concept\ }move\_constructible\ =\ \_\_is\_constructible(T,\ T);}
+\DoxyCodeLine{00064\ \ \ \textcolor{keyword}{concept\ }constructible\_from\ =\ destructible<T>\ \&\&\ \_\_is\_constructible(T,\ Args...);}
+\DoxyCodeLine{00065\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }T,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00066\ \ \ \textcolor{keyword}{concept\ }nothrow\_constructible\_from\ =\ destructible<T>\ \&\&\ \_\_is\_nothrow\_constructible(T,\ Args...);}
+\DoxyCodeLine{00067\ }
 \DoxyCodeLine{00068\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00069\ \ \ \textcolor{keyword}{concept\ }nothrow\_move\_constructible\ =\ \_\_is\_nothrow\_constructible(T,\ T);}
-\DoxyCodeLine{00070\ }
-\DoxyCodeLine{00071\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00072\ \ \ \textcolor{keyword}{concept\ }move\_assignable\ =\ \_\_is\_assignable(T\ \&,\ T);}
+\DoxyCodeLine{00069\ \ \ \textcolor{keyword}{concept\ }move\_constructible\ =\ \_\_is\_constructible(T,\ T);}
+\DoxyCodeLine{00070\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00071\ \ \ \textcolor{keyword}{concept\ }nothrow\_move\_constructible\ =\ \_\_is\_nothrow\_constructible(T,\ T);}
+\DoxyCodeLine{00072\ }
 \DoxyCodeLine{00073\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00074\ \ \ \textcolor{keyword}{concept\ }nothrow\_move\_assignable\ =\ \_\_is\_nothrow\_assignable(T\ \&,\ T);}
-\DoxyCodeLine{00075\ }
-\DoxyCodeLine{00076\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00077\ \ \ \textcolor{keyword}{concept\ }copy\_constructible\ =\ \_\_is\_constructible(T,\ \textcolor{keyword}{const}\ T\ \&);}
+\DoxyCodeLine{00074\ \ \ \textcolor{keyword}{concept\ }move\_assignable\ =\ \_\_is\_assignable(T\ \&,\ T);}
+\DoxyCodeLine{00075\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00076\ \ \ \textcolor{keyword}{concept\ }nothrow\_move\_assignable\ =\ \_\_is\_nothrow\_assignable(T\ \&,\ T);}
+\DoxyCodeLine{00077\ }
 \DoxyCodeLine{00078\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00079\ \ \ \textcolor{keyword}{concept\ }nothrow\_copy\_constructible\ =\ \_\_is\_nothrow\_constructible(T,\ \textcolor{keyword}{const}\ T\ \&);}
-\DoxyCodeLine{00080\ }
-\DoxyCodeLine{00081\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00082\ \ \ \textcolor{keyword}{concept\ }copy\_assignable\ =\ \_\_is\_assignable(T\ \&,\ \textcolor{keyword}{const}\ T\ \&);}
+\DoxyCodeLine{00079\ \ \ \textcolor{keyword}{concept\ }copy\_constructible\ =\ \_\_is\_constructible(T,\ \textcolor{keyword}{const}\ T\ \&);}
+\DoxyCodeLine{00080\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00081\ \ \ \textcolor{keyword}{concept\ }nothrow\_copy\_constructible\ =\ \_\_is\_nothrow\_constructible(T,\ \textcolor{keyword}{const}\ T\ \&);}
+\DoxyCodeLine{00082\ }
 \DoxyCodeLine{00083\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00084\ \ \ \textcolor{keyword}{concept\ }nothrow\_copy\_assignable\ =\ \_\_is\_nothrow\_assignable(T\ \&,\ \textcolor{keyword}{const}\ T\ \&);}
-\DoxyCodeLine{00085\ }
-\DoxyCodeLine{00086\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ From,\ \textcolor{keyword}{class}\ To>}
-\DoxyCodeLine{00087\ \ \ \textcolor{keyword}{concept\ }convertible\_to\ =\ \_\_is\_convertible\_to(From,\ To)\ \&\&\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ From\ \&from)\ \{}
-\DoxyCodeLine{00088\ \ \ \ \ \{\ \textcolor{keyword}{static\_cast<}To\textcolor{keyword}{>}(from)\ \};}
-\DoxyCodeLine{00089\ \ \ \};}
-\DoxyCodeLine{00090\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ From,\ \textcolor{keyword}{class}\ To>}
-\DoxyCodeLine{00091\ \ \ \textcolor{keyword}{concept\ }nothrow\_convertible\_to\ =\ \_\_is\_convertible\_to(From,\ To)\ \&\&\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ From\ \&from)\ \{}
-\DoxyCodeLine{00092\ \ \ \ \ \{\ \textcolor{keyword}{static\_cast<}To\textcolor{keyword}{>}(from)\ \}\ \textcolor{keyword}{noexcept};}
-\DoxyCodeLine{00093\ \ \ \};}
-\DoxyCodeLine{00094\ }
-\DoxyCodeLine{00095\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00096\ \ \ \textcolor{keyword}{concept\ }void\_type\ =\ same\_as<T,\ void>;}
-\DoxyCodeLine{00097\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
-\DoxyCodeLine{00098\ \ \ \textcolor{keyword}{concept\ }not\_void\ =\ !void\_type<T>;}
+\DoxyCodeLine{00084\ \ \ \textcolor{keyword}{concept\ }copy\_assignable\ =\ \_\_is\_assignable(T\ \&,\ \textcolor{keyword}{const}\ T\ \&);}
+\DoxyCodeLine{00085\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00086\ \ \ \textcolor{keyword}{concept\ }nothrow\_copy\_assignable\ =\ \_\_is\_nothrow\_assignable(T\ \&,\ \textcolor{keyword}{const}\ T\ \&);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ From,\ \textcolor{keyword}{class}\ To>}
+\DoxyCodeLine{00089\ \ \ \textcolor{keyword}{concept\ }convertible\_to\ =\ \_\_is\_convertible\_to(From,\ To)\ \&\&\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ From\ \&from)\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \{\ \textcolor{keyword}{static\_cast<}To\textcolor{keyword}{>}(from)\ \};}
+\DoxyCodeLine{00091\ \ \ \};}
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ From,\ \textcolor{keyword}{class}\ To>}
+\DoxyCodeLine{00093\ \ \ \textcolor{keyword}{concept\ }nothrow\_convertible\_to\ =\ \_\_is\_convertible\_to(From,\ To)\ \&\&\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ From\ \&from)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \{\ \textcolor{keyword}{static\_cast<}To\textcolor{keyword}{>}(from)\ \}\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00095\ \ \ \};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Derived,\ \textcolor{keyword}{class}\ Base>}
+\DoxyCodeLine{00098\ \ \ \textcolor{keyword}{concept\ }derived\_from\ =\ \_\_is\_base\_of(Base,\ Derived)\ \&\&\ \_\_is\_convertible\_to(\textcolor{keyword}{const}\ \textcolor{keyword}{volatile}\ Derived\ *,\ \textcolor{keyword}{const}\ \textcolor{keyword}{volatile}\ Base\ *);}
 \DoxyCodeLine{00099\ }
-\DoxyCodeLine{00100\ \}\ \ \textcolor{comment}{//\ namespace\ mtc}}
-\DoxyCodeLine{00101\ }
-\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ MTC\_CONCEPTS\_HPP}}
+\DoxyCodeLine{00100\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00101\ \ \ \textcolor{keyword}{concept\ }void\_type\ =\ same\_as<T,\ void>;}
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00103\ \ \ \textcolor{keyword}{concept\ }not\_void\ =\ !void\_type<T>;}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }Fn,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00106\ \ \ \textcolor{keyword}{concept\ }callable\ =\ \textcolor{keyword}{requires}(Fn\ \&\&fn,\ Args\ \&\&...args)\ \{\ \textcolor{keyword}{static\_cast<}Fn\ \&\&\textcolor{keyword}{>}(fn)(\textcolor{keyword}{static\_cast<}Args\ \&\&\textcolor{keyword}{>}(args)...);\ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }Fn,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00109\ \ \ \textcolor{keyword}{concept\ }nothrow\_callable\ =\ callable<Fn,\ Args...>\ \&\&\ \textcolor{keyword}{requires}(Fn\ \&\&fn,\ Args\ \&\&...args)\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \{\ \textcolor{keyword}{static\_cast<}Fn\ \&\&\textcolor{keyword}{>}(fn)(\textcolor{keyword}{static\_cast<}Args\ \&\&\textcolor{keyword}{>}(args)...)\ \}\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00111\ \ \ \};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }Fn,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00114\ \ \ \textcolor{keyword}{using\ }call\_result\_t\ =\ \textcolor{keyword}{decltype}(declval<Fn>()(declval<Args>()...));}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \}\ \ \textcolor{comment}{//\ namespace\ mtc}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ MTC\_CONCEPTS\_HPP}}
 
 \end{DoxyCode}
