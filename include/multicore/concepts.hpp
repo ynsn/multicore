@@ -50,6 +50,53 @@ namespace mtc {
   template <class A, class B>
   concept same_as = detail::is_same_v<A, B>;
 
+  template <class T>
+  concept destructible = __is_nothrow_destructible(T);
+
+  template <class T>
+  concept default_constructible = __is_constructible(T);
+  template <class T>
+  concept nothrow_default_constructible = __is_nothrow_constructible(T);
+
+  template <class T, class... Args>
+  concept constructible_from = destructible<T> && __is_constructible(T, Args...);
+  template <class T, class... Args>
+  concept nothrow_constructible_from = destructible<T> && __is_nothrow_constructible(T, Args...);
+
+  template <class T>
+  concept move_constructible = __is_constructible(T, T);
+  template <class T>
+  concept nothrow_move_constructible = __is_nothrow_constructible(T, T);
+
+  template <class T>
+  concept move_assignable = __is_assignable(T &, T);
+  template <class T>
+  concept nothrow_move_assignable = __is_nothrow_assignable(T &, T);
+
+  template <class T>
+  concept copy_constructible = __is_constructible(T, const T &);
+  template <class T>
+  concept nothrow_copy_constructible = __is_nothrow_constructible(T, const T &);
+
+  template <class T>
+  concept copy_assignable = __is_assignable(T &, const T &);
+  template <class T>
+  concept nothrow_copy_assignable = __is_nothrow_assignable(T &, const T &);
+
+  template <class From, class To>
+  concept convertible_to = __is_convertible_to(From, To) && requires(const From &from) {
+    { static_cast<To>(from) };
+  };
+  template <class From, class To>
+  concept nothrow_convertible_to = __is_convertible_to(From, To) && requires(const From &from) {
+    { static_cast<To>(from) } noexcept;
+  };
+
+  template <class T>
+  concept void_type = same_as<T, void>;
+  template <class T>
+  concept not_void = !void_type<T>;
+
 }  // namespace mtc
 
 #endif  // MTC_CONCEPTS_HPP
