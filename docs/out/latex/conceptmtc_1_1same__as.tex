@@ -1,0 +1,30 @@
+\doxysection{mtc\+::same\+\_\+as Concept Reference}
+\hypertarget{conceptmtc_1_1same__as}{}\label{conceptmtc_1_1same__as}\index{mtc::same\_as@{mtc::same\_as}}
+
+
+The {\ttfamily same\+\_\+as} concept is satisfied if and only if type {\ttfamily A} is the same type as type {\ttfamily B}.  
+
+
+
+
+{\ttfamily \#include $<$concepts.\+hpp$>$}
+
+\doxysubsection{Concept definition}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{template}<\textcolor{keyword}{class}\ A,\ \textcolor{keyword}{class}\ B>}
+\DoxyCodeLine{\textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1same__as}{mtc::same\_as}}\ =\ \ detail::is\_same\_v<A,\ B>}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Detailed Description}
+The {\ttfamily same\+\_\+as} concept is satisfied if and only if type {\ttfamily A} is the same type as type {\ttfamily B}. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em A} & The first type. \\
+\hline
+{\em B} & The second type. \\
+\hline
+\end{DoxyTemplParams}
