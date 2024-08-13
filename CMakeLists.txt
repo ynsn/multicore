@@ -30,3 +30,7 @@ target_include_directories(libmulticore PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/incl
 add_executable(multicore main.cpp)
 target_include_directories(multicore PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(multicore PRIVATE libmulticore)
+
+add_executable(multicore_stop_token_test tests/stop_token_test.cpp)
+target_include_directories(multicore_stop_token_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(multicore_stop_token_test PRIVATE libmulticore)

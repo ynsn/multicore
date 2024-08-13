@@ -31,16 +31,77 @@
 
 #include "concepts.hpp"
 
+#include <concepts>
 #include <thread>
 
 namespace mtc {
+
   /**
    * \defgroup stop_token stop_token
    * \brief The `stop_token` module provides facilities for working with stop tokens.
    */
 
+  /// \ingroup stop_token
+  /// \brief The `mtc::stoppable_token` concept is satisfied if `Token` models a stop token that is copyable, equality
+  /// comparable, swappable and allows polling to see if a stop request has been issued and/or is at all possible.
+  /// \tparam Token The type to check.
+  template <class Token>
+  concept stoppable_token = requires(const Token tok) {
+    { tok.stop_requested() } noexcept -> std::same_as<bool>;
+    { tok.stop_possible() } noexcept -> std::same_as<bool>;
+    { Token(tok) } noexcept;
+    typename detail::template_alias<Token::template callback_type>;
+  } && std::copyable<Token> && std::equality_comparable<Token> && std::swappable<Token>;
+
+  /// \ingroup stop_token
+  /// \brief The `mtc::stoppable_token_for` concept is satisfied if `Token` satisfies the `mtc::stoppable_token` concept
+  /// and `Callback` is compatible with the token's callback type.
+  /// \tparam Token The type to check.
+  /// \tparam Callback The type to check.
+  /// \tparam Init Initializer.
+  template <class Token, class Callback, class Init = Callback>
+  concept stoppable_token_for = stoppable_token<Token> &&                                                                            //
+                                std::invocable<Callback> &&                                                                          //
+                                requires { typename Token::template callback_type<Callback>; } &&                                    //
+                                std::constructible_from<Callback, Init> &&                                                           //
+                                std::constructible_from<typename Token::template callback_type<Callback>, Token, Init> &&            //
+                                std::constructible_from<typename Token::template callback_type<Callback>, Token &, Callback> &&      //
+                                std::constructible_from<typename Token::template callback_type<Callback>, const Token, Callback> &&  //
+                                std::constructible_from<typename Token::template callback_type<Callback>, const Token &, Callback>;  //
+
+  /// \ingroup stop_token
+  /// \brief The `mtc::unstoppable_token` concept is satisfied if `Token` satisfies the `mtc::stoppable_token` concept
+  /// but disallows issuing stop requests.
+  /// \tparam Token The type to check.
+  template <class Token>
+  concept unstoppable_token = stoppable_token<Token> &&  //
+                              requires {
+                                { Token::stop_possible() } -> boolean_testable;
+                                requires(!Token::stop_possible());
+                              };
+
+  /// \ingroup stop_token
+  /// \brief The `mtc::never_stop_token` class provides a stop token that never allows issuing stop requests.
+  class never_stop_token {
+   private:
+    struct callback {
+      constexpr explicit callback(never_stop_token, auto &&) noexcept {}
+    };
+
+   public:
+    template <class>
+    using callback_type = callback;
+
+    [[nodiscard]] static constexpr auto stop_possible() noexcept -> bool { return false; }
+    [[nodiscard]] static constexpr auto stop_requested() noexcept -> bool { return false; }
+    [[nodiscard]] friend constexpr auto operator==(const never_stop_token &, const never_stop_token &) noexcept -> bool { return true; }
+    [[nodiscard]] friend constexpr auto operator!=(never_stop_token, never_stop_token) noexcept -> bool = default;
+  };
+
   class inplace_stop_token;
   class inplace_stop_source;
+  template <class Fn>
+  class inplace_stop_callback;
 
   namespace detail {
     struct inplace_stop_callback_base {
@@ -60,9 +121,6 @@ namespace mtc {
     };
   }  // namespace detail
 
-  template <class Fn>
-  class inplace_stop_callback;
-
   /// \ingroup stop_token
   /// \brief The `mtc::inplace_stop_source` class provides the means to issue stop requests to associated stop tokens.
   /// Contrary to `std::stop_source`, this class guarantees that it does not dynamically allocate memory on the heap.
@@ -73,22 +131,30 @@ namespace mtc {
     inplace_stop_source(inplace_stop_source &&) = delete;
     ~inplace_stop_source() noexcept;
 
-   public:
     auto operator=(const inplace_stop_source &) -> inplace_stop_source & = delete;
     auto operator=(inplace_stop_source &&) -> inplace_stop_source & = delete;
 
    public:
+    /// \brief The `request_stop()` method issues a stop request to all associated stop tokens if the
+    /// `mtc::inplace_stop_source` object has not yet already received a stop request.
+    /// \return `true` if the stop request was issued, otherwise `false`.
+    /// \post `stop_requested() == true`
+    auto request_stop() noexcept -> bool;
+
+    auto swap(inplace_stop_source &other) noexcept -> void = delete;
+
+   public:
     /// \brief The `get_token()` method returns a new stop token associated with this stop source.
     /// \return A new stop token.
-    [[nodiscard]] auto get_token() const noexcept -> inplace_stop_token ;
-
-    /// \brief The `request_stop()` method issues a stop request to all associated stop tokens.
-    /// \return `true` if the stop request was issued, `false` if the stop request was already issued.
-    auto request_stop() noexcept -> bool;
+    [[nodiscard]] auto get_token() const noexcept -> inplace_stop_token;
 
     /// \brief The `stop_requested()` method checks if a stop request has been issued.
     /// \return `true` if a stop request has been issued, `false` otherwise.
     [[nodiscard]] auto stop_requested() const noexcept -> bool;
+
+    /// \brief The `stop_possible()` method returns whether this object may issue a stop request.
+    /// \return `true` if a stop request may be issued, `false` otherwise.
+    [[nodiscard]] static constexpr auto stop_possible() noexcept -> bool { return true; }
 
    private:
     template <class>
@@ -160,8 +226,8 @@ namespace mtc {
   class inplace_stop_callback : detail::inplace_stop_callback_base {
    public:
     template <class F>
-      requires constructible_from<Fn, F>
-    explicit inplace_stop_callback(const inplace_stop_token token, F &&cb) noexcept(nothrow_constructible_from<Fn, F>)
+      requires std::constructible_from<Fn, F>
+    explicit inplace_stop_callback(const inplace_stop_token token, F &&cb) noexcept(std::is_nothrow_constructible_v<Fn, F>)
         : inplace_stop_callback_base(token.source, &inplace_stop_callback::invoke_impl), callback{MTC_FWD(cb)} {
       register_callback();
     }

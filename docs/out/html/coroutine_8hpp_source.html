@@ -158,7 +158,7 @@ $(document).ready(function(){initNavTree('coroutine_8hpp_source.html',''); initR
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> Result, <span class="keyword">class</span> Promise = <span class="keywordtype">void</span>&gt;</div>
 <div class="foldopen" id="foldopen00074" data-start="{" data-end="}">
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="conceptmtc_1_1awaiter__of.html">   74</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="conceptmtc_1_1awaiter__of.html">awaiter_of</a> = <a class="code hl_concept" href="conceptmtc_1_1awaiter.html">awaiter&lt;T, Promise&gt;</a> &amp;&amp; <span class="keyword">requires</span>(T &amp;&amp;a) {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    { a.await_resume() } -&gt; <a class="code hl_concept" href="conceptmtc_1_1same__as.html">same_as&lt;Result&gt;</a>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    { a.await_resume() } -&gt; same_as&lt;Result&gt;;</div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  };</div>
 </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
@@ -203,7 +203,6 @@ $(document).ready(function(){initNavTree('coroutine_8hpp_source.html',''); initR
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="preprocessor">#endif  </span><span class="comment">// MTC_COROUTINE_HPP</span></div>
 <div class="ttc" id="aconceptmtc_1_1awaiter__of_html"><div class="ttname"><a href="conceptmtc_1_1awaiter__of.html">mtc::awaiter_of</a></div><div class="ttdoc">The mtc::awaiter_of concept is satisfied if and only if type T is a valid mtc::awaiter that returns t...</div><div class="ttdef"><b>Definition</b> coroutine.hpp:74</div></div>
 <div class="ttc" id="aconceptmtc_1_1awaiter_html"><div class="ttname"><a href="conceptmtc_1_1awaiter.html">mtc::awaiter</a></div><div class="ttdoc">The mtc::awaiter concept is satisfied if and only if type T is a valid awaiter as defined by the C++2...</div><div class="ttdef"><b>Definition</b> coroutine.hpp:60</div></div>
-<div class="ttc" id="aconceptmtc_1_1same__as_html"><div class="ttname"><a href="conceptmtc_1_1same__as.html">mtc::same_as</a></div><div class="ttdoc">The same_as concept is satisfied if and only if type A is the same type as type B.</div><div class="ttdef"><b>Definition</b> concepts.hpp:53</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

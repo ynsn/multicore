@@ -80,7 +80,7 @@ namespace mtc {
   auto inplace_stop_source::get_token() const noexcept -> inplace_stop_token { return inplace_stop_token{this}; }
 
   auto inplace_stop_source::request_stop() noexcept -> bool {
-    if (!try_lock(true)) return true;
+    if (!try_lock(true)) return false;
 
     notifying = std::this_thread::get_id();
 
@@ -104,7 +104,7 @@ namespace mtc {
     }
 
     state.store(stop_requested_flag, std::memory_order_release);
-    return false;
+    return true;
   }
 
   auto inplace_stop_source::stop_requested() const noexcept -> bool {
@@ -185,8 +185,8 @@ namespace mtc {
     return *this;
   }
 
-  auto inplace_stop_token::stop_requested() const noexcept -> bool { return stop_possible() && source->stop_requested(); }
-  auto inplace_stop_token::stop_possible() const noexcept -> bool { return source != nullptr; }
+  auto inplace_stop_token::stop_requested() const noexcept -> bool { return source != nullptr && source->stop_requested(); }
+  auto inplace_stop_token::stop_possible() const noexcept -> bool { return (source != nullptr) && (!source->stop_requested()); }
   auto inplace_stop_token::swap(inplace_stop_token &other) noexcept -> void { std::swap(source, other.source); }
   inplace_stop_token::inplace_stop_token(const inplace_stop_source *src) noexcept : source{src} {}
 }  // namespace mtc
