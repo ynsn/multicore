@@ -29,6 +29,8 @@
 #ifndef MTC_CONCEPTS_HPP
 #define MTC_CONCEPTS_HPP
 
+#include "utility.hpp"
+
 namespace mtc {
 
   /**
@@ -92,10 +94,24 @@ namespace mtc {
     { static_cast<To>(from) } noexcept;
   };
 
+  template <class Derived, class Base>
+  concept derived_from = __is_base_of(Base, Derived) && __is_convertible_to(const volatile Derived *, const volatile Base *);
+
   template <class T>
   concept void_type = same_as<T, void>;
   template <class T>
   concept not_void = !void_type<T>;
+
+  template <class Fn, class... Args>
+  concept callable = requires(Fn &&fn, Args &&...args) { static_cast<Fn &&>(fn)(static_cast<Args &&>(args)...); };
+
+  template <class Fn, class... Args>
+  concept nothrow_callable = callable<Fn, Args...> && requires(Fn &&fn, Args &&...args) {
+    { static_cast<Fn &&>(fn)(static_cast<Args &&>(args)...) } noexcept;
+  };
+
+  template <class Fn, class... Args>
+  using call_result_t = decltype(declval<Fn>()(declval<Args>()...));
 
 }  // namespace mtc
 
