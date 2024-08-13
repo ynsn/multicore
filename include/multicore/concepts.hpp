@@ -113,6 +113,11 @@ namespace mtc {
   template <class Fn, class... Args>
   using call_result_t = decltype(declval<Fn>()(declval<Args>()...));
 
+  template <class T>
+  concept boolean_testable = convertible_to<T, bool> && requires(T &&t) {
+    { !static_cast<T &&>(t) } -> convertible_to<bool>;
+  };
+
 }  // namespace mtc
 
 #endif  // MTC_CONCEPTS_HPP
