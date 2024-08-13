@@ -169,4 +169,24 @@ namespace mtc {
       }
     }
   }
+
+  //---------------------------------------------------------------------------------------------------------------------------------------------
+  // class inplace_stop_token
+  //---------------------------------------------------------------------------------------------------------------------------------------------
+
+  inplace_stop_token::inplace_stop_token(inplace_stop_token &&other) noexcept : source{other.source} { other.source = nullptr; }
+
+  auto inplace_stop_token::operator=(inplace_stop_token &&other) noexcept -> inplace_stop_token & {
+    if (this != &other) {
+      source = other.source;
+      other.source = nullptr;
+    }
+
+    return *this;
+  }
+
+  auto inplace_stop_token::stop_requested() const noexcept -> bool { return stop_possible() && source->stop_requested(); }
+  auto inplace_stop_token::stop_possible() const noexcept -> bool { return source != nullptr; }
+  auto inplace_stop_token::swap(inplace_stop_token &other) noexcept -> void { std::swap(source, other.source); }
+  inplace_stop_token::inplace_stop_token(const inplace_stop_source *src) noexcept : source{src} {}
 }  // namespace mtc

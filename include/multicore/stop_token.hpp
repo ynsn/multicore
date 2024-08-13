@@ -80,7 +80,7 @@ namespace mtc {
    public:
     /// \brief The `get_token()` method returns a new stop token associated with this stop source.
     /// \return A new stop token.
-    [[nodiscard]] auto get_token() const noexcept -> inplace_stop_token;
+    [[nodiscard]] auto get_token() const noexcept -> inplace_stop_token ;
 
     /// \brief The `request_stop()` method issues a stop request to all associated stop tokens.
     /// \return `true` if the stop request was issued, `false` if the stop request was already issued.
@@ -119,41 +119,34 @@ namespace mtc {
 
     inplace_stop_token() noexcept = default;
     inplace_stop_token(const inplace_stop_token &) noexcept = default;
-    inplace_stop_token(inplace_stop_token &&other) noexcept : source{other.source} { other.source = nullptr; }
+    inplace_stop_token(inplace_stop_token &&other) noexcept;
     ~inplace_stop_token() noexcept = default;
 
    public:
     auto operator=(const inplace_stop_token &) noexcept -> inplace_stop_token & = default;
-    auto operator=(inplace_stop_token &&other) noexcept -> inplace_stop_token & {
-      if (this != &other) {
-        source = other.source;
-        other.source = nullptr;
-      }
-
-      return *this;
-    }
+    auto operator=(inplace_stop_token &&other) noexcept -> inplace_stop_token &;
     auto operator==(const inplace_stop_token &other) const noexcept -> bool = default;
 
    public:
     /// \brief The `stop_requested()` method checks if a stop request has been issued.
     /// \return `true` if a stop request has been issued, `false` otherwise.
-    [[nodiscard]] auto stop_requested() const noexcept -> bool { return stop_possible() && source->stop_requested(); }
+    [[nodiscard]] auto stop_requested() const noexcept -> bool;
 
     /// \brief The `stop_possible()` method checks if a stop request can be issued.
     /// \return `true` if a stop request can be issued, `false` otherwise.
-    [[nodiscard]] auto stop_possible() const noexcept -> bool { return source != nullptr; }
+    [[nodiscard]] auto stop_possible() const noexcept -> bool;
 
    public:
     /// \brief The `swap()` method swaps the contents of two `mtc::inplace_stop_token` objects.
     /// \param other The other `mtc::inplace_stop_token` object to swap with.
-    auto swap(inplace_stop_token &other) noexcept -> void { std::swap(source, other.source); }
+    auto swap(inplace_stop_token &other) noexcept -> void;
 
    private:
     template <class>
     friend class inplace_stop_callback;
     friend class inplace_stop_source;
 
-    explicit inplace_stop_token(const inplace_stop_source *src) noexcept : source{src} {}
+    explicit inplace_stop_token(const inplace_stop_source *src) noexcept;
 
    private:
     const inplace_stop_source *source{nullptr};
