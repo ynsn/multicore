@@ -139,13 +139,16 @@ $(document).ready(function(){initNavTree('concepts_8hpp_source.html',''); initRe
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> is_same_v&lt;T, T&gt; = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  }  <span class="comment">// namespace detail</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> A, <span class="keyword">class</span> B&gt;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="conceptmtc_1_1same__as.html">   51</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="conceptmtc_1_1same__as.html">same_as</a> = detail::is_same_v&lt;A, B&gt;;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}  <span class="comment">// namespace mtc</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#endif  </span><span class="comment">// MTC_CONCEPTS_HPP</span></div>
-<div class="ttc" id="aconceptmtc_1_1same__as_html"><div class="ttname"><a href="conceptmtc_1_1same__as.html">mtc::same_as</a></div><div class="ttdoc">The same_as concept is satisfied if and only if type A is the same type as type B.</div><div class="ttdef"><b>Definition</b> concepts.hpp:51</div></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">concept </span>always_false = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> A, <span class="keyword">class</span> B&gt;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="conceptmtc_1_1same__as.html">   54</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="conceptmtc_1_1same__as.html">same_as</a> = detail::is_same_v&lt;A, B&gt;;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}  <span class="comment">// namespace mtc</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif  </span><span class="comment">// MTC_CONCEPTS_HPP</span></div>
+<div class="ttc" id="aconceptmtc_1_1same__as_html"><div class="ttname"><a href="conceptmtc_1_1same__as.html">mtc::same_as</a></div><div class="ttdoc">The same_as concept is satisfied if and only if type A is the same type as type B.</div><div class="ttdef"><b>Definition</b> concepts.hpp:54</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

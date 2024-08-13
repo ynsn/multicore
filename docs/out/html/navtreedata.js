@@ -25,6 +25,7 @@
 var NAVTREE =
 [
   [ "Multicore", "index.html", [
+    [ "Todo List", "todo.html", null ],
     [ "Topics", "topics.html", "topics" ],
     [ "Concepts", "concepts.html", "concepts" ]
   ] ]
@@ -32,7 +33,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"conceptmtc_1_1same__as.html"
+"conceptmtc_1_1awaiter.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

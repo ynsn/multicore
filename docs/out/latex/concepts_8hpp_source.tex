@@ -42,11 +42,14 @@
 \DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ is\_same\_v<T,\ T>\ =\ \textcolor{keyword}{true};}
 \DoxyCodeLine{00044\ \ \ \}\ \ \textcolor{comment}{//\ namespace\ detail}}
 \DoxyCodeLine{00045\ }
-\DoxyCodeLine{00050\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ A,\ \textcolor{keyword}{class}\ B>}
-\DoxyCodeLine{00051\ \ \ \textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1same__as}{same\_as}}\ =\ detail::is\_same\_v<A,\ B>;}
-\DoxyCodeLine{00052\ }
-\DoxyCodeLine{00053\ \}\ \ \textcolor{comment}{//\ namespace\ mtc}}
-\DoxyCodeLine{00054\ }
-\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ MTC\_CONCEPTS\_HPP}}
+\DoxyCodeLine{00046\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00047\ \ \ \textcolor{keyword}{concept\ }always\_false\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00053\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ A,\ \textcolor{keyword}{class}\ B>}
+\DoxyCodeLine{00054\ \ \ \textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1same__as}{same\_as}}\ =\ detail::is\_same\_v<A,\ B>;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \}\ \ \textcolor{comment}{//\ namespace\ mtc}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ MTC\_CONCEPTS\_HPP}}
 
 \end{DoxyCode}
