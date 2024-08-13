@@ -31,6 +31,9 @@
 
 #include "utility.hpp"
 
+#include <concepts>
+#include <type_traits>
+
 namespace mtc {
 
   /**
@@ -39,68 +42,9 @@ namespace mtc {
    */
 
   namespace detail {
-    template <class T, class U>
-    inline constexpr auto is_same_v = false;
-    template <class T>
-    inline constexpr auto is_same_v<T, T> = true;
+    template <template <class> class>
+    struct template_alias {};
   }  // namespace detail
-
-  /// \ingroup concepts
-  /// \brief The `same_as` concept is satisfied if and only if type `A` is the same type as type `B`.
-  /// \tparam A The first type.
-  /// \tparam B The second type.
-  template <class A, class B>
-  concept same_as = detail::is_same_v<A, B>;
-
-  template <class T>
-  concept destructible = __is_nothrow_destructible(T);
-
-  template <class T>
-  concept default_constructible = __is_constructible(T);
-  template <class T>
-  concept nothrow_default_constructible = __is_nothrow_constructible(T);
-
-  template <class T, class... Args>
-  concept constructible_from = destructible<T> && __is_constructible(T, Args...);
-  template <class T, class... Args>
-  concept nothrow_constructible_from = destructible<T> && __is_nothrow_constructible(T, Args...);
-
-  template <class T>
-  concept move_constructible = __is_constructible(T, T);
-  template <class T>
-  concept nothrow_move_constructible = __is_nothrow_constructible(T, T);
-
-  template <class T>
-  concept move_assignable = __is_assignable(T &, T);
-  template <class T>
-  concept nothrow_move_assignable = __is_nothrow_assignable(T &, T);
-
-  template <class T>
-  concept copy_constructible = __is_constructible(T, const T &);
-  template <class T>
-  concept nothrow_copy_constructible = __is_nothrow_constructible(T, const T &);
-
-  template <class T>
-  concept copy_assignable = __is_assignable(T &, const T &);
-  template <class T>
-  concept nothrow_copy_assignable = __is_nothrow_assignable(T &, const T &);
-
-  template <class From, class To>
-  concept convertible_to = __is_convertible_to(From, To) && requires(const From &from) {
-    { static_cast<To>(from) };
-  };
-  template <class From, class To>
-  concept nothrow_convertible_to = __is_convertible_to(From, To) && requires(const From &from) {
-    { static_cast<To>(from) } noexcept;
-  };
-
-  template <class Derived, class Base>
-  concept derived_from = __is_base_of(Base, Derived) && __is_convertible_to(const volatile Derived *, const volatile Base *);
-
-  template <class T>
-  concept void_type = same_as<T, void>;
-  template <class T>
-  concept not_void = !void_type<T>;
 
   template <class Fn, class... Args>
   concept callable = requires(Fn &&fn, Args &&...args) { static_cast<Fn &&>(fn)(static_cast<Args &&>(args)...); };
@@ -114,10 +58,9 @@ namespace mtc {
   using call_result_t = decltype(declval<Fn>()(declval<Args>()...));
 
   template <class T>
-  concept boolean_testable = convertible_to<T, bool> && requires(T &&t) {
-    { !static_cast<T &&>(t) } -> convertible_to<bool>;
+  concept boolean_testable = std::convertible_to<T, bool> && requires(T &&t) {
+    { !static_cast<T &&>(t) } -> std::convertible_to<bool>;
   };
-
 }  // namespace mtc
 
 #endif  // MTC_CONCEPTS_HPP
