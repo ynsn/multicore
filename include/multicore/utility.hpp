@@ -38,15 +38,26 @@ namespace mtc {
     };
 
     template <class T>
-    struct remove_reference<T&> {
+    struct remove_reference<T &> {
       using type = T;
     };
 
     template <class T>
-    struct remove_reference<T&&> {
+    struct remove_reference<T &&> {
       using type = T;
     };
+
+    template<class>
+    inline constexpr auto always_false = false;
   }  // namespace detail
+
+  template <class T>
+  auto as_lvalue(T &&) -> T &;
+
+  template <class T>
+  auto declval() noexcept -> T && {
+    static_assert(detail::always_false<T>, "Calling declval is ill-formed");
+  }
 
 }  // namespace mtc
 
