@@ -53,10 +53,10 @@ namespace mtc {
         { Allocator(MTC_MOVE(c)) } noexcept;                                                                             // Regular constructible
         { static_cast<Allocator &&>(a) = b } noexcept;                                                                   // Copy assignable
         { static_cast<Allocator &&>(a) = MTC_MOVE(c) } noexcept;                                                         // Move assignable
-        { static_cast<Allocator &&>(a) == MTC_FWD(a) } noexcept -> convertible_to<bool>;                                 // Comparable
-        { static_cast<Allocator &&>(a) != MTC_FWD(a) } noexcept -> convertible_to<bool>;                                 // Comparable
-        { static_cast<Allocator &&>(a).allocate(n) } -> same_as<typename std::remove_cvref_t<Allocator>::value_type *>;  // `allocate` method
-        { static_cast<Allocator &&>(a).deallocate(p, n) } -> same_as<void>;                                              // `deallocate` method
+        { static_cast<Allocator &&>(a) == MTC_FWD(a) } noexcept -> std::convertible_to<bool>;                                 // Comparable
+        { static_cast<Allocator &&>(a) != MTC_FWD(a) } noexcept -> std::convertible_to<bool>;                                 // Comparable
+        { static_cast<Allocator &&>(a).allocate(n) } -> std::same_as<typename std::remove_cvref_t<Allocator>::value_type *>;  // `allocate` method
+        { static_cast<Allocator &&>(a).deallocate(p, n) } -> std::same_as<void>;                                              // `deallocate` method
       };
 
   /// \ingroup allocator
@@ -67,7 +67,7 @@ namespace mtc {
   /// \see mtc::allocator
   /// \see https://en.cppreference.com/w/cpp/named_req/Allocator
   template <class Allocator, class T>
-  concept allocator_for = allocator<Allocator> && same_as<T, typename Allocator::value_type>;
+  concept allocator_for = allocator<Allocator> && std::same_as<T, typename Allocator::value_type>;
 
   /// \ingroup allocator
   /// \brief The `mtc::allocate_result_t` alias template is used to get the result type of the `allocate` method of an allocator.
@@ -81,7 +81,7 @@ namespace mtc {
     [[no_unique_address]] Allocator allocator;
 
     template <class U = Allocator>
-      requires constructible_from<Allocator, U &&>
+      requires std::constructible_from<Allocator, U &&>
     // ReSharper disable once CppNonExplicitConvertingConstructor
     constexpr uses_allocator(U &&u) noexcept : allocator(MTC_FWD(u)) {}  // NOLINT(*-explicit-constructor)
   };
@@ -97,7 +97,7 @@ namespace mtc {
   using used_allocator_in_t = typename used_allocator_in<Args...>::type;
 
   template <class... Args>
-  inline constexpr auto using_allocator_v = !same_as<used_allocator_in_t<Args...>, void>;
+  inline constexpr auto using_allocator_v = !std::same_as<used_allocator_in_t<Args...>, void>;
 
 }  // namespace mtc
 
