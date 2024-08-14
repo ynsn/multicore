@@ -75,6 +75,30 @@ namespace mtc {
   /// \see mtc::allocator
   template <allocator Allocator>
   using allocate_result_t = decltype(declval<Allocator>().allocate(declval<size_t>()));
+
+  template <allocator Allocator>
+  struct uses_allocator {
+    [[no_unique_address]] Allocator allocator;
+
+    template <class U = Allocator>
+      requires constructible_from<Allocator, U &&>
+    // ReSharper disable once CppNonExplicitConvertingConstructor
+    constexpr uses_allocator(U &&u) noexcept : allocator(MTC_FWD(u)) {}  // NOLINT(*-explicit-constructor)
+  };
+
+  template <class... Args>
+  struct used_allocator_in : std::type_identity<void> {};
+  template <class T, class... Args>
+  struct used_allocator_in<uses_allocator<T>, Args...> : std::type_identity<T> {};
+  template <class Head, class... Tail>
+  struct used_allocator_in<Head, Tail...> : used_allocator_in<Tail...> {};
+
+  template <class... Args>
+  using used_allocator_in_t = typename used_allocator_in<Args...>::type;
+
+  template <class... Args>
+  inline constexpr auto using_allocator_v = !same_as<used_allocator_in_t<Args...>, void>;
+
 }  // namespace mtc
 
 #endif  // MTC_ALLOCATOR_HPP
