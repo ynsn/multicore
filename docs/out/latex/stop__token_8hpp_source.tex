@@ -1,0 +1,211 @@
+\doxysection{stop\+\_\+token.\+hpp}
+\hypertarget{stop__token_8hpp_source}{}\label{stop__token_8hpp_source}\index{D:/Development/multicore/include/multicore/stop\_token.hpp@{D:/Development/multicore/include/multicore/stop\_token.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ (c)\ 2024\ -\/\ present,\ Yoram\ Janssen\ and\ Multicore\ contributors}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Permission\ is\ hereby\ granted,\ free\ of\ charge,\ to\ any\ person\ obtaining}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ a\ copy\ of\ this\ software\ and\ associated\ documentation\ files\ (the}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ "{}Software"{}),\ to\ deal\ in\ the\ Software\ without\ restriction,\ including}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ without\ limitation\ the\ rights\ to\ use,\ copy,\ modify,\ merge,\ publish,}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ distribute,\ sublicense,\ and/or\ sell\ copies\ of\ the\ Software,\ and\ to}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ permit\ persons\ to\ whom\ the\ Software\ is\ furnished\ to\ do\ so,\ subject\ to}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ the\ following\ conditions:}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ The\ above\ copyright\ notice\ and\ this\ permission\ notice\ shall\ be}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ included\ in\ all\ copies\ or\ substantial\ portions\ of\ the\ Software.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ THE\ SOFTWARE\ IS\ PROVIDED\ "{}AS\ IS"{},\ WITHOUT\ WARRANTY\ OF\ ANY\ KIND,}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ EXPRESS\ OR\ IMPLIED,\ INCLUDING\ BUT\ NOT\ LIMITED\ TO\ THE\ WARRANTIES\ OF}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ MERCHANTABILITY,\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ AND}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ NONINFRINGEMENT.\ IN\ NO\ EVENT\ SHALL\ THE\ AUTHORS\ OR\ COPYRIGHT\ HOLDERS\ BE}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ LIABLE\ FOR\ ANY\ CLAIM,\ DAMAGES\ OR\ OTHER\ LIABILITY,\ WHETHER\ IN\ AN\ ACTION}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ OF\ CONTRACT,\ TORT\ OR\ OTHERWISE,\ ARISING\ FROM,\ OUT\ OF\ OR\ IN\ CONNECTION}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ WITH\ THE\ SOFTWARE\ OR\ THE\ USE\ OR\ OTHER\ DEALINGS\ IN\ THE\ SOFTWARE.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ -\/-\/-\/\ Optional\ exception\ to\ the\ license\ -\/-\/-\/}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ As\ an\ exception,\ if,\ as\ a\ result\ of\ your\ compiling\ your\ source\ code,\ portions}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ of\ this\ Software\ are\ embedded\ into\ a\ machine-\/executable\ object\ form\ of\ such}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ source\ code,\ you\ may\ redistribute\ such\ embedded\ portions\ in\ such\ object\ form}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ without\ including\ the\ above\ copyright\ and\ permission\ notices.}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#ifndef\ MTC\_STOP\_TOKEN\_HPP}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ MTC\_STOP\_TOKEN\_HPP}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}concepts.hpp"{}}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ <concepts>}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{namespace\ }mtc\ \{}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00048\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Token>}
+\DoxyCodeLine{00049\ \ \ \textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1stoppable__token}{stoppable\_token}}\ =\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ Token\ tok)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \{\ tok.stop\_requested()\ \}\ \textcolor{keyword}{noexcept}\ -\/>\ std::same\_as<bool>;}
+\DoxyCodeLine{00051\ \ \ \ \ \{\ tok.stop\_possible()\ \}\ \textcolor{keyword}{noexcept}\ -\/>\ std::same\_as<bool>;}
+\DoxyCodeLine{00052\ \ \ \ \ \{\ Token(tok)\ \}\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{typename}\ detail::template\_alias<Token::template\ callback\_type>;}
+\DoxyCodeLine{00054\ \ \ \}\ \&\&\ std::copyable<Token>\ \&\&\ std::equality\_comparable<Token>\ \&\&\ std::swappable<Token>;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00062\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Token,\ \textcolor{keyword}{class}\ Callback,\ \textcolor{keyword}{class}\ Init\ =\ Callback>}
+\DoxyCodeLine{00063\ \ \ \textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1stoppable__token__for}{stoppable\_token\_for}}\ =\ \mbox{\hyperlink{conceptmtc_1_1stoppable__token}{stoppable\_token<Token>}}\ \&\&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::invocable<Callback>\ \&\&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{requires}\ \{\ \textcolor{keyword}{typename}\ Token::template\ callback\_type<Callback>;\ \}\ \&\&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::constructible\_from<Callback,\ Init>\ \&\&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::constructible\_from<typename\ Token::template\ callback\_type<Callback>,\ Token,\ Init>\ \&\&\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::constructible\_from<typename\ Token::template\ callback\_type<Callback>,\ Token\ \&,\ Callback>\ \&\&\ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::constructible\_from<typename\ Token::template\ callback\_type<Callback>,\ \textcolor{keyword}{const}\ Token,\ Callback>\ \&\&\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::constructible\_from<typename\ Token::template\ callback\_type<Callback>,\ \textcolor{keyword}{const}\ Token\ \&,\ Callback>;\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00076\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Token>}
+\DoxyCodeLine{00077\ \ \ \textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1unstoppable__token}{unstoppable\_token}}\ =\ \mbox{\hyperlink{conceptmtc_1_1stoppable__token}{stoppable\_token<Token>}}\ \&\&\ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{requires}\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ Token::stop\_possible()\ \}\ -\/>\ boolean\_testable;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{requires}(!Token::stop\_possible());}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00085\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1never__stop__token}{never\_stop\_token}}\ \{}
+\DoxyCodeLine{00086\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{struct\ }callback\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{explicit}\ callback(\mbox{\hyperlink{classmtc_1_1never__stop__token}{never\_stop\_token}},\ \textcolor{keyword}{auto}\ \&\&)\ \textcolor{keyword}{noexcept}\ \{\}}
+\DoxyCodeLine{00089\ \ \ \ \ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}>}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{using\ }callback\_type\ =\ callback;}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ stop\_possible()\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00096\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ stop\_requested()\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00097\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{friend}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator==(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1never__stop__token}{never\_stop\_token}}\ \&,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1never__stop__token}{never\_stop\_token}}\ \&)\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00098\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{friend}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator!=(\mbox{\hyperlink{classmtc_1_1never__stop__token}{never\_stop\_token}},\ \mbox{\hyperlink{classmtc_1_1never__stop__token}{never\_stop\_token}})\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00099\ \ \ \};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}};}
+\DoxyCodeLine{00102\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}};}
+\DoxyCodeLine{00103\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Fn>}
+\DoxyCodeLine{00104\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback}};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \textcolor{keyword}{namespace\ }detail\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{struct\ }inplace\_stop\_callback\_base\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \textcolor{keyword}{using\ }callback\_type\ =\ void(inplace\_stop\_callback\_base\ *)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \ \ inplace\_stop\_callback\_base(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ *src,\ callback\_type\ *cb)\ noexcept\ :\ source\{src\},\ callback\{cb\}\ \{\}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ invoke()\ noexcept\ -\/>\ \textcolor{keywordtype}{void};}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ auto\ register\_callback()\ noexcept\ -\/>\ \textcolor{keywordtype}{void};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \ \ const\ inplace\_stop\_source\ *source;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ callback\_type\ *callback;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ inplace\_stop\_callback\_base\ *next\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ inplace\_stop\_callback\_base\ **previous\_pointer\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ *removed\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ std::atomic<bool>\ completed\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00121\ \ \ \ \ \};}
+\DoxyCodeLine{00122\ \ \ \}\ \ \textcolor{comment}{//\ namespace\ detail}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00127\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ \{}
+\DoxyCodeLine{00128\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00129\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}()\ \textcolor{keyword}{noexcept}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00130\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00131\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}(\mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ \&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00132\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{\string~inplace\_stop\_source}}()\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{auto}\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ \&)\ -\/>\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ \&\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{auto}\ operator=(\mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ \&\&)\ -\/>\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ \&\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source_aeab992d3caf8c53796e7fec5620e2b6d}{request\_stop}}()\ noexcept\ -\/>\ \textcolor{keywordtype}{bool};}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ auto\ swap(\mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ \&other)\ noexcept\ -\/>\ \textcolor{keywordtype}{void}\ =\ delete;}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ public:}
+\DoxyCodeLine{00149\ \ \ \ \ [[nodiscard]]\ auto\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source_a49bc60fa90265fc01634297fd5260606}{get\_token}}()\ const\ noexcept\ -\/>\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}};}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00153\ \ \ \ \ [[nodiscard]]\ auto\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source_ada795e52b771db60e39aa06eedae49e1}{stop\_requested}}()\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{bool};}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00157\ \ \ \ \ [[nodiscard]]\ static\ constexpr\ auto\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source_af8a30f87d562032bb706c23750866fd2}{stop\_possible}}()\ noexcept\ -\/>\ \textcolor{keywordtype}{bool}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}>}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback}};}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }detail::inplace\_stop\_callback\_base;}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}};}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{auto}\ lock()\ const\ noexcept\ -\/>\ uint8\_t;}
+\DoxyCodeLine{00166\ \ \ \ \ auto\ unlock(uint8\_t\ old\_state)\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{void};}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ auto\ try\_lock(\textcolor{keywordtype}{bool})\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{bool};}
+\DoxyCodeLine{00169\ \ \ \ \ auto\ try\_add\_callback(detail::inplace\_stop\_callback\_base\ *)\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{bool};}
+\DoxyCodeLine{00170\ \ \ \ \ auto\ remove\_callback(const\ detail::inplace\_stop\_callback\_base\ *)\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{void};}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ private:}
+\DoxyCodeLine{00173\ \ \ \ \ mutable\ detail::inplace\_stop\_callback\_base\ *callbacks\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00174\ \ \ \ \ std::thread::id\ notifying\{\};}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{mutable}\ std::atomic<uint8\_t>\ state\{0\};}
+\DoxyCodeLine{00176\ \ \ \};}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00181\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \{}
+\DoxyCodeLine{00182\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Fn>}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{callback\_type}}\ =\ \mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback<Fn>}};}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}()\ \textcolor{keyword}{noexcept}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00187\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \&)\ \textcolor{keyword}{noexcept}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00188\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}(\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \&\&other)\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00189\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{\string~inplace\_stop\_token}}()\ \textcolor{keyword}{noexcept}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{auto}\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \&)\ \textcolor{keyword}{noexcept}\ -\/>\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \&\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keyword}{auto}\ operator=(\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \&\&other)\ \textcolor{keyword}{noexcept}\ -\/>\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \&;}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{auto}\ operator==(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \&other)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00199\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token_a9952183c029ce985b273eec07d7302ed}{stop\_requested}}()\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{bool};}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00203\ \ \ \ \ [[nodiscard]]\ auto\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token_a689248ac4dd2f11bc848dc5dce493204}{stop\_possible}}()\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{bool};}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ public:}
+\DoxyCodeLine{00208\ \ \ \ \ auto\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token_af8742abc071cf5c99ecb4993578daf76}{swap}}(\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ \&other)\ noexcept\ -\/>\ \textcolor{keywordtype}{void};}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ private:}
+\DoxyCodeLine{00211\ \ \ \ \ template\ <class>}
+\DoxyCodeLine{00212\ \ \ \ \ friend\ class\ \mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback}};}
+\DoxyCodeLine{00213\ \ \ \ \ friend\ class\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}};}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ explicit\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}(const\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ *src)\ noexcept;}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ private:}
+\DoxyCodeLine{00218\ \ \ \ \ const\ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\_stop\_source}}\ *source\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00219\ \ \ \};}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00225\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Fn>}
+\DoxyCodeLine{00226\ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback}}\ :\ detail::inplace\_stop\_callback\_base\ \{}
+\DoxyCodeLine{00227\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ F>}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \textcolor{keyword}{requires}\ std::constructible\_from<Fn,\ F>}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}}\ token,\ F\ \&\&cb)\ \textcolor{keyword}{noexcept}(std::is\_nothrow\_constructible\_v<Fn,\ F>)}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ :\ inplace\_stop\_callback\_base(token.source,\ \&inplace\_stop\_callback::invoke\_impl),\ callback\{MTC\_FWD(cb)\}\ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ register\_callback();}
+\DoxyCodeLine{00233\ \ \ \ \ \}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{\string~inplace\_stop\_callback}}()\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (source\ !=\ \textcolor{keyword}{nullptr})\ source-\/>remove\_callback(\textcolor{keyword}{this});}
+\DoxyCodeLine{00237\ \ \ \ \ \}}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ invoke\_impl(inplace\_stop\_callback\_base\ *callback\_base)\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{void}\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ MTC\_MOVE(\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback}}\ *\textcolor{keyword}{>}(callback\_base)-\/>callback)();}
+\DoxyCodeLine{00242\ \ \ \ \ \}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ Fn\ callback;}
+\DoxyCodeLine{00245\ \ \ \};}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Fn>}
+\DoxyCodeLine{00248\ \ \ \mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback}}(\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\_stop\_token}},\ Fn\ \&\&)\ -\/>\ \mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\_stop\_callback<Fn>}};}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \}\ \ \textcolor{comment}{//\ namespace\ mtc}}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ MTC\_STOP\_TOKEN\_HPP}}
+
+\end{DoxyCode}

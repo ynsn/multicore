@@ -1,0 +1,102 @@
+\doxysection{mtc\+::inplace\+\_\+stop\+\_\+token Class Reference}
+\hypertarget{classmtc_1_1inplace__stop__token}{}\label{classmtc_1_1inplace__stop__token}\index{mtc::inplace\_stop\_token@{mtc::inplace\_stop\_token}}
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__token}{mtc\+::inplace\+\_\+stop\+\_\+token}} class provides the means to check if a stop request has been issued or can be issued, for its associated {\ttfamily \doxylink{classmtc_1_1inplace__stop__source}{mtc\+::inplace\+\_\+stop\+\_\+source}}.  
+
+
+
+
+{\ttfamily \#include $<$stop\+\_\+token.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__token_aec9ff1caa9efbd568398d52944b6013c}\label{classmtc_1_1inplace__stop__token_aec9ff1caa9efbd568398d52944b6013c} 
+{\footnotesize template$<$class Fn $>$ }\\using {\bfseries callback\+\_\+type} = \mbox{\hyperlink{classmtc_1_1inplace__stop__callback}{inplace\+\_\+stop\+\_\+callback}}$<$ Fn $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__token_aa3e3790dc4c24f9edaa800400d41c33a}\label{classmtc_1_1inplace__stop__token_aa3e3790dc4c24f9edaa800400d41c33a} 
+{\bfseries inplace\+\_\+stop\+\_\+token} (const \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&) noexcept=default
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__token_a53477ec1d4fc7ba1f0fe6401f007bbfd}\label{classmtc_1_1inplace__stop__token_a53477ec1d4fc7ba1f0fe6401f007bbfd} 
+{\bfseries inplace\+\_\+stop\+\_\+token} (\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&\&other) noexcept
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__token_af67d12788cf120f36d63147814cbfdfb}\label{classmtc_1_1inplace__stop__token_af67d12788cf120f36d63147814cbfdfb} 
+auto {\bfseries operator=} (const \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&) noexcept -\/$>$ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&=default
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__token_a5e526c71fa4237732fda7f44d2fba65b}\label{classmtc_1_1inplace__stop__token_a5e526c71fa4237732fda7f44d2fba65b} 
+auto {\bfseries operator=} (\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&\&other) noexcept -\/$>$ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__token_ae19906fac9af885560c230aede4b9ac9}\label{classmtc_1_1inplace__stop__token_ae19906fac9af885560c230aede4b9ac9} 
+auto {\bfseries operator==} (const \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&other) const noexcept -\/$>$ bool=default
+\item 
+auto \mbox{\hyperlink{classmtc_1_1inplace__stop__token_a9952183c029ce985b273eec07d7302ed}{stop\+\_\+requested}} () const noexcept -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{classmtc_1_1inplace__stop__token_a9952183c029ce985b273eec07d7302ed}{stop\+\_\+requested()}} method checks if a stop request has been issued. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classmtc_1_1inplace__stop__token_a689248ac4dd2f11bc848dc5dce493204}{stop\+\_\+possible}} () const noexcept -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{classmtc_1_1inplace__stop__token_a689248ac4dd2f11bc848dc5dce493204}{stop\+\_\+possible()}} method checks if a stop request can be issued. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classmtc_1_1inplace__stop__token_af8742abc071cf5c99ecb4993578daf76}{swap}} (\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&other) noexcept -\/$>$ void
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{classmtc_1_1inplace__stop__token_af8742abc071cf5c99ecb4993578daf76}{swap()}} method swaps the contents of two {\ttfamily \doxylink{classmtc_1_1inplace__stop__token}{mtc\+::inplace\+\_\+stop\+\_\+token}} objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__token_aa9cb2a33360598356c2e44f4cc55b557}\label{classmtc_1_1inplace__stop__token_aa9cb2a33360598356c2e44f4cc55b557} 
+{\footnotesize template$<$class $>$ }\\class {\bfseries inplace\+\_\+stop\+\_\+callback}
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__token_a7ffa5cb9d09412edef3ff19874b50004}\label{classmtc_1_1inplace__stop__token_a7ffa5cb9d09412edef3ff19874b50004} 
+class {\bfseries inplace\+\_\+stop\+\_\+source}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__token}{mtc\+::inplace\+\_\+stop\+\_\+token}} class provides the means to check if a stop request has been issued or can be issued, for its associated {\ttfamily \doxylink{classmtc_1_1inplace__stop__source}{mtc\+::inplace\+\_\+stop\+\_\+source}}. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classmtc_1_1inplace__stop__token_a9952183c029ce985b273eec07d7302ed}\label{classmtc_1_1inplace__stop__token_a9952183c029ce985b273eec07d7302ed} 
+\index{mtc::inplace\_stop\_token@{mtc::inplace\_stop\_token}!stop\_requested@{stop\_requested}}
+\index{stop\_requested@{stop\_requested}!mtc::inplace\_stop\_token@{mtc::inplace\_stop\_token}}
+\doxysubsubsection{\texorpdfstring{stop\_requested()}{stop\_requested()}}
+{\footnotesize\ttfamily auto mtc\+::inplace\+\_\+stop\+\_\+token\+::stop\+\_\+requested (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$  bool\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__token_a9952183c029ce985b273eec07d7302ed}{stop\+\_\+requested()}} method checks if a stop request has been issued. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if a stop request has been issued, {\ttfamily false} otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classmtc_1_1inplace__stop__token_a689248ac4dd2f11bc848dc5dce493204}\label{classmtc_1_1inplace__stop__token_a689248ac4dd2f11bc848dc5dce493204} 
+\index{mtc::inplace\_stop\_token@{mtc::inplace\_stop\_token}!stop\_possible@{stop\_possible}}
+\index{stop\_possible@{stop\_possible}!mtc::inplace\_stop\_token@{mtc::inplace\_stop\_token}}
+\doxysubsubsection{\texorpdfstring{stop\_possible()}{stop\_possible()}}
+{\footnotesize\ttfamily auto mtc\+::inplace\+\_\+stop\+\_\+token\+::stop\+\_\+possible (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$  bool\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__token_a689248ac4dd2f11bc848dc5dce493204}{stop\+\_\+possible()}} method checks if a stop request can be issued. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if a stop request can be issued, {\ttfamily false} otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classmtc_1_1inplace__stop__token_af8742abc071cf5c99ecb4993578daf76}\label{classmtc_1_1inplace__stop__token_af8742abc071cf5c99ecb4993578daf76} 
+\index{mtc::inplace\_stop\_token@{mtc::inplace\_stop\_token}!swap@{swap}}
+\index{swap@{swap}!mtc::inplace\_stop\_token@{mtc::inplace\_stop\_token}}
+\doxysubsubsection{\texorpdfstring{swap()}{swap()}}
+{\footnotesize\ttfamily auto mtc\+::inplace\+\_\+stop\+\_\+token\+::swap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}} \&}]{other }\end{DoxyParamCaption}) -\/$>$  void\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__token_af8742abc071cf5c99ecb4993578daf76}{swap()}} method swaps the contents of two {\ttfamily \doxylink{classmtc_1_1inplace__stop__token}{mtc\+::inplace\+\_\+stop\+\_\+token}} objects. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & The other {\ttfamily \doxylink{classmtc_1_1inplace__stop__token}{mtc\+::inplace\+\_\+stop\+\_\+token}} object to swap with. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/\+Development/multicore/include/multicore/stop\+\_\+token.\+hpp\end{DoxyCompactItemize}

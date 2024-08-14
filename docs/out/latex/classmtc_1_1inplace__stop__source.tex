@@ -1,0 +1,118 @@
+\doxysection{mtc\+::inplace\+\_\+stop\+\_\+source Class Reference}
+\hypertarget{classmtc_1_1inplace__stop__source}{}\label{classmtc_1_1inplace__stop__source}\index{mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}}
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source}{mtc\+::inplace\+\_\+stop\+\_\+source}} class provides the means to issue stop requests to associated stop tokens. Contrary to {\ttfamily std\+::stop\+\_\+source}, this class guarantees that it does not dynamically allocate memory on the heap.  
+
+
+
+
+{\ttfamily \#include $<$stop\+\_\+token.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__source_a317c6d2f48452e7f5d4a07c032d64f37}\label{classmtc_1_1inplace__stop__source_a317c6d2f48452e7f5d4a07c032d64f37} 
+{\bfseries inplace\+\_\+stop\+\_\+source} (const \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\+\_\+stop\+\_\+source}} \&)=delete
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__source_a7a29e1f2fbd5d954470833c4dae9a11c}\label{classmtc_1_1inplace__stop__source_a7a29e1f2fbd5d954470833c4dae9a11c} 
+{\bfseries inplace\+\_\+stop\+\_\+source} (\mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\+\_\+stop\+\_\+source}} \&\&)=delete
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__source_acbe7d044f62793ffad39043bce48146f}\label{classmtc_1_1inplace__stop__source_acbe7d044f62793ffad39043bce48146f} 
+auto {\bfseries operator=} (const \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\+\_\+stop\+\_\+source}} \&) -\/$>$ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\+\_\+stop\+\_\+source}} \&=delete
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__source_a4084b4f488a75bcc898cecc263d44573}\label{classmtc_1_1inplace__stop__source_a4084b4f488a75bcc898cecc263d44573} 
+auto {\bfseries operator=} (\mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\+\_\+stop\+\_\+source}} \&\&) -\/$>$ \mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\+\_\+stop\+\_\+source}} \&=delete
+\item 
+auto \mbox{\hyperlink{classmtc_1_1inplace__stop__source_aeab992d3caf8c53796e7fec5620e2b6d}{request\+\_\+stop}} () noexcept -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source_aeab992d3caf8c53796e7fec5620e2b6d}{request\+\_\+stop()}} method issues a stop request to all associated stop tokens if the {\ttfamily \doxylink{classmtc_1_1inplace__stop__source}{mtc\+::inplace\+\_\+stop\+\_\+source}} object has not yet already received a stop request. \end{DoxyCompactList}\item 
+\Hypertarget{classmtc_1_1inplace__stop__source_abed6ad4bcf58c52e5685024b61e9f846}\label{classmtc_1_1inplace__stop__source_abed6ad4bcf58c52e5685024b61e9f846} 
+auto {\bfseries swap} (\mbox{\hyperlink{classmtc_1_1inplace__stop__source}{inplace\+\_\+stop\+\_\+source}} \&other) noexcept -\/$>$ void=delete
+\item 
+auto \mbox{\hyperlink{classmtc_1_1inplace__stop__source_a49bc60fa90265fc01634297fd5260606}{get\+\_\+token}} () const noexcept -\/$>$ \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}}
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source_a49bc60fa90265fc01634297fd5260606}{get\+\_\+token()}} method returns a new stop token associated with this stop source. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classmtc_1_1inplace__stop__source_ada795e52b771db60e39aa06eedae49e1}{stop\+\_\+requested}} () const noexcept -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source_ada795e52b771db60e39aa06eedae49e1}{stop\+\_\+requested()}} method checks if a stop request has been issued. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static constexpr auto \mbox{\hyperlink{classmtc_1_1inplace__stop__source_af8a30f87d562032bb706c23750866fd2}{stop\+\_\+possible}} () noexcept -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source_af8a30f87d562032bb706c23750866fd2}{stop\+\_\+possible()}} method returns whether this object may issue a stop request. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__source_aa9cb2a33360598356c2e44f4cc55b557}\label{classmtc_1_1inplace__stop__source_aa9cb2a33360598356c2e44f4cc55b557} 
+{\footnotesize template$<$class $>$ }\\class {\bfseries inplace\+\_\+stop\+\_\+callback}
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__source_aa297369dcddbfb95b65e54e722b2cdd4}\label{classmtc_1_1inplace__stop__source_aa297369dcddbfb95b65e54e722b2cdd4} 
+class {\bfseries detail\+::inplace\+\_\+stop\+\_\+callback\+\_\+base}
+\item 
+\Hypertarget{classmtc_1_1inplace__stop__source_ae5f411eba1fb4b23bba2986b0a2fd299}\label{classmtc_1_1inplace__stop__source_ae5f411eba1fb4b23bba2986b0a2fd299} 
+class {\bfseries inplace\+\_\+stop\+\_\+token}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source}{mtc\+::inplace\+\_\+stop\+\_\+source}} class provides the means to issue stop requests to associated stop tokens. Contrary to {\ttfamily std\+::stop\+\_\+source}, this class guarantees that it does not dynamically allocate memory on the heap. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classmtc_1_1inplace__stop__source_aeab992d3caf8c53796e7fec5620e2b6d}\label{classmtc_1_1inplace__stop__source_aeab992d3caf8c53796e7fec5620e2b6d} 
+\index{mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}!request\_stop@{request\_stop}}
+\index{request\_stop@{request\_stop}!mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}}
+\doxysubsubsection{\texorpdfstring{request\_stop()}{request\_stop()}}
+{\footnotesize\ttfamily auto mtc\+::inplace\+\_\+stop\+\_\+source\+::request\+\_\+stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) -\/$>$  bool\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source_aeab992d3caf8c53796e7fec5620e2b6d}{request\+\_\+stop()}} method issues a stop request to all associated stop tokens if the {\ttfamily \doxylink{classmtc_1_1inplace__stop__source}{mtc\+::inplace\+\_\+stop\+\_\+source}} object has not yet already received a stop request. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if the stop request was issued, otherwise {\ttfamily false}. 
+\end{DoxyReturn}
+\begin{DoxyPostcond}{Postcondition}
+{\ttfamily \doxylink{classmtc_1_1inplace__stop__source_ada795e52b771db60e39aa06eedae49e1}{stop\+\_\+requested()} == true} 
+\end{DoxyPostcond}
+\Hypertarget{classmtc_1_1inplace__stop__source_a49bc60fa90265fc01634297fd5260606}\label{classmtc_1_1inplace__stop__source_a49bc60fa90265fc01634297fd5260606} 
+\index{mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}!get\_token@{get\_token}}
+\index{get\_token@{get\_token}!mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}}
+\doxysubsubsection{\texorpdfstring{get\_token()}{get\_token()}}
+{\footnotesize\ttfamily auto mtc\+::inplace\+\_\+stop\+\_\+source\+::get\+\_\+token (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$  \mbox{\hyperlink{classmtc_1_1inplace__stop__token}{inplace\+\_\+stop\+\_\+token}}\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source_a49bc60fa90265fc01634297fd5260606}{get\+\_\+token()}} method returns a new stop token associated with this stop source. 
+
+\begin{DoxyReturn}{Returns}
+A new stop token. 
+\end{DoxyReturn}
+\Hypertarget{classmtc_1_1inplace__stop__source_ada795e52b771db60e39aa06eedae49e1}\label{classmtc_1_1inplace__stop__source_ada795e52b771db60e39aa06eedae49e1} 
+\index{mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}!stop\_requested@{stop\_requested}}
+\index{stop\_requested@{stop\_requested}!mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}}
+\doxysubsubsection{\texorpdfstring{stop\_requested()}{stop\_requested()}}
+{\footnotesize\ttfamily auto mtc\+::inplace\+\_\+stop\+\_\+source\+::stop\+\_\+requested (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$  bool\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source_ada795e52b771db60e39aa06eedae49e1}{stop\+\_\+requested()}} method checks if a stop request has been issued. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if a stop request has been issued, {\ttfamily false} otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classmtc_1_1inplace__stop__source_af8a30f87d562032bb706c23750866fd2}\label{classmtc_1_1inplace__stop__source_af8a30f87d562032bb706c23750866fd2} 
+\index{mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}!stop\_possible@{stop\_possible}}
+\index{stop\_possible@{stop\_possible}!mtc::inplace\_stop\_source@{mtc::inplace\_stop\_source}}
+\doxysubsubsection{\texorpdfstring{stop\_possible()}{stop\_possible()}}
+{\footnotesize\ttfamily static constexpr auto mtc\+::inplace\+\_\+stop\+\_\+source\+::stop\+\_\+possible (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) -\/$>$ bool \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}, {\ttfamily [constexpr]}, {\ttfamily [noexcept]}}
+
+
+
+The {\ttfamily \doxylink{classmtc_1_1inplace__stop__source_af8a30f87d562032bb706c23750866fd2}{stop\+\_\+possible()}} method returns whether this object may issue a stop request. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} if a stop request may be issued, {\ttfamily false} otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/\+Development/multicore/include/multicore/stop\+\_\+token.\+hpp\end{DoxyCompactItemize}

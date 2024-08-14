@@ -1,0 +1,38 @@
+\doxysection{mtc Namespace Reference}
+\hypertarget{namespacemtc}{}\label{namespacemtc}\index{mtc@{mtc}}
+
+
+TODO Add missing documentation.  
+
+
+\doxysubsubsection*{Concepts}
+\begin{DoxyCompactItemize}
+\item 
+concept \mbox{\hyperlink{conceptmtc_1_1same__as}{same\+\_\+as}}
+\begin{DoxyCompactList}\small\item\em The {\ttfamily same\+\_\+as} concept is satisfied if and only if type {\ttfamily A} is the same type as type {\ttfamily B}. \end{DoxyCompactList}\item 
+concept \mbox{\hyperlink{conceptmtc_1_1awaiter}{awaiter}}
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{conceptmtc_1_1awaiter}{mtc\+::awaiter}} concept is satisfied if and only if type {\ttfamily T} is a valid awaiter as defined by the C++20 standard. \end{DoxyCompactList}\item 
+concept \mbox{\hyperlink{conceptmtc_1_1awaiter__of}{awaiter\+\_\+of}}
+\begin{DoxyCompactList}\small\item\em The {\ttfamily \doxylink{conceptmtc_1_1awaiter__of}{mtc\+::awaiter\+\_\+of}} concept is satisfied if and only if type {\ttfamily T} is a valid {\ttfamily \doxylink{conceptmtc_1_1awaiter}{mtc\+::awaiter}} that returns the given result type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespacemtc_a18b14ba93f7b054a1c9d75cae63ab4c5}\label{namespacemtc_a18b14ba93f7b054a1c9d75cae63ab4c5} 
+{\footnotesize template$<$class Awaitable $>$ }\\using {\bfseries awaiter\+\_\+type\+\_\+t} = decltype(get\+\_\+awaiter(declval$<$ Awaitable $>$(), static\+\_\+cast$<$ void \texorpdfstring{$\ast$}{*} $>$(nullptr)))
+\item 
+\Hypertarget{namespacemtc_a0aa97c550b500b97a09130986a07dd7e}\label{namespacemtc_a0aa97c550b500b97a09130986a07dd7e} 
+{\footnotesize template$<$class Awaitable , class Promise  = void$>$ }\\using {\bfseries await\+\_\+result\+\_\+t} = decltype(as\+\_\+lvalue(get\+\_\+awaiter(declval$<$ Awaitable $>$(), static\+\_\+cast$<$ Promise \texorpdfstring{$\ast$}{*} $>$(nullptr))).await\+\_\+resume())
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{namespacemtc_aefcd3af06b8472be9c5be2f346d6748e}\label{namespacemtc_aefcd3af06b8472be9c5be2f346d6748e} 
+{\footnotesize template$<$class T $>$ }\\auto {\bfseries as\+\_\+lvalue} (T \&\&) -\/$>$ T \&
+\item 
+\Hypertarget{namespacemtc_aaea449ef6e298834e868c1ed89e45a2f}\label{namespacemtc_aaea449ef6e298834e868c1ed89e45a2f} 
+{\footnotesize template$<$class T $>$ }\\auto {\bfseries declval} () noexcept -\/$>$ T \&\&
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+TODO Add missing documentation. 

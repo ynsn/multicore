@@ -1,0 +1,116 @@
+\doxysection{mtc\+::failure\texorpdfstring{$<$}{<} E \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classmtc_1_1failure}{}\label{classmtc_1_1failure}\index{mtc::failure$<$ E $>$@{mtc::failure$<$ E $>$}}
+
+
+The {\ttfamily failure\texorpdfstring{$<$}{<}E\texorpdfstring{$>$}{>}} wrapper type wraps a satisfies {\ttfamily error\+\_\+type} E.  
+
+
+
+
+{\ttfamily \#include $<$result.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}\label{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c} 
+using {\bfseries error\+\_\+type} = E
+\begin{DoxyCompactList}\small\item\em The wrapped error type. \end{DoxyCompactList}\item 
+\Hypertarget{classmtc_1_1failure_abfa405f9b557592e17cabe2aabaf5cca}\label{classmtc_1_1failure_abfa405f9b557592e17cabe2aabaf5cca} 
+using {\bfseries lvalue\+\_\+reference} = std\+::add\+\_\+lvalue\+\_\+reference\+\_\+t$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$
+\begin{DoxyCompactList}\small\item\em The wrapped error type a a lvalue reference. \end{DoxyCompactList}\item 
+\Hypertarget{classmtc_1_1failure_a67630712a5112058f94b46a461a7091b}\label{classmtc_1_1failure_a67630712a5112058f94b46a461a7091b} 
+using {\bfseries rvalue\+\_\+reference} = std\+::add\+\_\+rvalue\+\_\+reference\+\_\+t$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$
+\item 
+\Hypertarget{classmtc_1_1failure_ae547d6fea8184309b223175647a7828d}\label{classmtc_1_1failure_ae547d6fea8184309b223175647a7828d} 
+using {\bfseries const\+\_\+lvalue\+\_\+reference} = std\+::add\+\_\+lvalue\+\_\+reference\+\_\+t$<$ std\+::add\+\_\+const\+\_\+t$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$ $>$
+\item 
+\Hypertarget{classmtc_1_1failure_a4e75c43675a3757a87d9a0902da7abe0}\label{classmtc_1_1failure_a4e75c43675a3757a87d9a0902da7abe0} 
+using {\bfseries const\+\_\+rvalue\+\_\+reference} = std\+::add\+\_\+rvalue\+\_\+reference\+\_\+t$<$ std\+::add\+\_\+const\+\_\+t$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$ $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmtc_1_1failure_a8162362847a08a6e0d7985a3b21e9190}\label{classmtc_1_1failure_a8162362847a08a6e0d7985a3b21e9190} 
+{\footnotesize template$<$class Err $>$ \newline
+requires constructible\+\_\+from$<$E, Err \&\&$>$ \&\& (!same\+\_\+as$<$std\+::remove\+\_\+cvref\+\_\+t$<$Err$>$, in\+\_\+place\+\_\+error\+\_\+t$>$) \&\& (!same\+\_\+as$<$std\+::remove\+\_\+cvref\+\_\+t$<$Err$>$, \mbox{\hyperlink{classmtc_1_1failure}{failure}}$>$)}\\constexpr {\bfseries explicit} (!std\+::convertible\+\_\+to$<$ Err \&\&, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$) \mbox{\hyperlink{classmtc_1_1failure}{failure}}(Err \&\&err) noexcept(noexcept(\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}(static\+\_\+cast$<$ Err \&\& $>$(err))))
+\item 
+\Hypertarget{classmtc_1_1failure_a86d42629b30b1ea90ce2eda9cf6413be}\label{classmtc_1_1failure_a86d42629b30b1ea90ce2eda9cf6413be} 
+{\footnotesize template$<$class... Args$>$ \newline
+requires constructible\+\_\+from$<$\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}, Args...$>$}\\constexpr {\bfseries failure} (in\+\_\+place\+\_\+error\+\_\+t, Args \&\&...args) noexcept(noexcept(\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}(static\+\_\+cast$<$ Args \&\& $>$(args)...)))
+\item 
+\Hypertarget{classmtc_1_1failure_a76805c5b9d84e391c2aea83f575255f1}\label{classmtc_1_1failure_a76805c5b9d84e391c2aea83f575255f1} 
+{\footnotesize template$<$class U , class... Args$>$ \newline
+requires constructible\+\_\+from$<$\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}, std\+::initializer\+\_\+list$<$U$>$ \&, Args...$>$}\\constexpr {\bfseries failure} (in\+\_\+place\+\_\+error\+\_\+t, std\+::initializer\+\_\+list$<$ U $>$ ilist, Args \&\&...args) noexcept(noexcept(\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}(ilist, static\+\_\+cast$<$ Args \&\& $>$(args)...)))
+\item 
+\Hypertarget{classmtc_1_1failure_a44d8ee188ea5c754deb30ed91149fee0}\label{classmtc_1_1failure_a44d8ee188ea5c754deb30ed91149fee0} 
+constexpr {\bfseries failure} (const \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&) noexcept(std\+::is\+\_\+nothrow\+\_\+copy\+\_\+constructible\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$)=default
+\item 
+\Hypertarget{classmtc_1_1failure_a497bf9fc2c89524adfa6ce29e20648b8}\label{classmtc_1_1failure_a497bf9fc2c89524adfa6ce29e20648b8} 
+constexpr {\bfseries failure} (const \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&)=delete
+\item 
+\Hypertarget{classmtc_1_1failure_ad4b82674960ccce2eea582d10984a996}\label{classmtc_1_1failure_ad4b82674960ccce2eea582d10984a996} 
+{\footnotesize template$<$class U $>$ \newline
+requires constructible\+\_\+from$<$\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}, const U \&$>$ \&\& (!same\+\_\+as$<$U, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}$>$)}\\constexpr {\bfseries explicit} (!std\+::convertible\+\_\+to$<$ const U \&, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$) \mbox{\hyperlink{classmtc_1_1failure}{failure}}(const \mbox{\hyperlink{classmtc_1_1failure}{failure}}$<$ U $>$ \&other) noexcept(noexcept(\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}(other.\+value())))
+\item 
+\Hypertarget{classmtc_1_1failure_a0e1d7d0e9432d91f616932e6096ee0b4}\label{classmtc_1_1failure_a0e1d7d0e9432d91f616932e6096ee0b4} 
+constexpr {\bfseries failure} (\mbox{\hyperlink{classmtc_1_1failure}{failure}} \&\&) noexcept(std\+::is\+\_\+nothrow\+\_\+move\+\_\+constructible\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$)=default
+\item 
+\Hypertarget{classmtc_1_1failure_a7cbfcfbe1e7059de45bfbbfdca2d9b38}\label{classmtc_1_1failure_a7cbfcfbe1e7059de45bfbbfdca2d9b38} 
+constexpr {\bfseries failure} (\mbox{\hyperlink{classmtc_1_1failure}{failure}} \&\&) noexcept(std\+::is\+\_\+nothrow\+\_\+move\+\_\+constructible\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$)=delete
+\item 
+\Hypertarget{classmtc_1_1failure_aa9ba9d08bc5292a7130ea0a538f5747b}\label{classmtc_1_1failure_aa9ba9d08bc5292a7130ea0a538f5747b} 
+{\footnotesize template$<$class U $>$ \newline
+requires constructible\+\_\+from$<$\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}, U \&\&$>$ \&\& (!same\+\_\+as$<$U, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}$>$)}\\constexpr {\bfseries explicit} (!std\+::convertible\+\_\+to$<$ U \&\&, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$) \mbox{\hyperlink{classmtc_1_1failure}{failure}}(\mbox{\hyperlink{classmtc_1_1failure}{failure}}$<$ U $>$ \&\&other) noexcept(noexcept(\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}(other.\+value())))
+\item 
+\Hypertarget{classmtc_1_1failure_aafc20d28fce692b6e7596f2057096c30}\label{classmtc_1_1failure_aafc20d28fce692b6e7596f2057096c30} 
+constexpr auto {\bfseries operator=} (const \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&other) noexcept(std\+::is\+\_\+nothrow\+\_\+copy\+\_\+assignable\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$) -\/$>$ \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&requires(std\+::is\+\_\+copy\+\_\+assignable\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$)=default
+\item 
+\Hypertarget{classmtc_1_1failure_a06ec8665a78735e2a011ae26e3f7f1eb}\label{classmtc_1_1failure_a06ec8665a78735e2a011ae26e3f7f1eb} 
+constexpr auto {\bfseries operator=} (const \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&other) noexcept(std\+::is\+\_\+nothrow\+\_\+copy\+\_\+assignable\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$) -\/$>$ \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&requires(!std\+::is\+\_\+copy\+\_\+assignable\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$)=delete
+\item 
+\Hypertarget{classmtc_1_1failure_a30bfb47eae442de9caddbb1a9976548c}\label{classmtc_1_1failure_a30bfb47eae442de9caddbb1a9976548c} 
+{\footnotesize template$<$class U $>$ \newline
+requires std\+::convertible\+\_\+to$<$const U \&, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}$>$ \&\& !same\+\_\+as$<$U, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}$>$}\\constexpr auto {\bfseries operator=} (const \mbox{\hyperlink{classmtc_1_1failure}{failure}}$<$ U $>$ \&other) noexcept(noexcept(error\+\_\+value=other.\+value())) -\/$>$ \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&
+\item 
+\Hypertarget{classmtc_1_1failure_af5f73f5aae80bcd4dabbe6393fd6a5ba}\label{classmtc_1_1failure_af5f73f5aae80bcd4dabbe6393fd6a5ba} 
+constexpr auto {\bfseries operator=} (\mbox{\hyperlink{classmtc_1_1failure}{failure}} \&\&other) noexcept(std\+::is\+\_\+nothrow\+\_\+move\+\_\+assignable\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$) -\/$>$ \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&requires(std\+::is\+\_\+move\+\_\+assignable\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$)=default
+\item 
+\Hypertarget{classmtc_1_1failure_a9489e90a740a199db5330c367694100c}\label{classmtc_1_1failure_a9489e90a740a199db5330c367694100c} 
+constexpr auto {\bfseries operator=} (\mbox{\hyperlink{classmtc_1_1failure}{failure}} \&\&other) noexcept(std\+::is\+\_\+nothrow\+\_\+move\+\_\+assignable\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$) -\/$>$ \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&requires(!std\+::is\+\_\+move\+\_\+assignable\+\_\+v$<$ \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$)=delete
+\item 
+\Hypertarget{classmtc_1_1failure_aee64d28d94884bc8ce424063e5b642f6}\label{classmtc_1_1failure_aee64d28d94884bc8ce424063e5b642f6} 
+{\footnotesize template$<$class U $>$ \newline
+requires std\+::convertible\+\_\+to$<$U \&\&, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}$>$ \&\& !same\+\_\+as$<$U, \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}}$>$}\\constexpr auto {\bfseries operator=} (\mbox{\hyperlink{classmtc_1_1failure}{failure}}$<$ U $>$ \&\&other) noexcept(noexcept(error\+\_\+value=std\+::move(other.\+value()))) -\/$>$ \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&
+\item 
+\Hypertarget{classmtc_1_1failure_acfdf34b6537d4d2f510ce933105b83a2}\label{classmtc_1_1failure_acfdf34b6537d4d2f510ce933105b83a2} 
+{\footnotesize template$<$class Err $>$ \newline
+requires std\+::convertible\+\_\+to$<$Err, E$>$ \&\& (!same\+\_\+as$<$std\+::remove\+\_\+cvref\+\_\+t$<$Err$>$, in\+\_\+place\+\_\+error\+\_\+t$>$) \&\& (!same\+\_\+as$<$std\+::remove\+\_\+cvref\+\_\+t$<$Err$>$, \mbox{\hyperlink{classmtc_1_1failure}{failure}}$<$E$>$$>$)}\\constexpr auto {\bfseries operator=} (Err \&\&other) noexcept(noexcept(error\+\_\+value=static\+\_\+cast$<$ Err \&\& $>$(other))) -\/$>$ \mbox{\hyperlink{classmtc_1_1failure}{failure}} \&
+\item 
+\Hypertarget{classmtc_1_1failure_a37c565e2f92087b17d67334e6e109799}\label{classmtc_1_1failure_a37c565e2f92087b17d67334e6e109799} 
+constexpr auto {\bfseries value} () \&noexcept -\/$>$ \mbox{\hyperlink{classmtc_1_1failure_abfa405f9b557592e17cabe2aabaf5cca}{lvalue\+\_\+reference}}
+\item 
+\Hypertarget{classmtc_1_1failure_a84b3e78c6d7b66c9240a8a6705ebf634}\label{classmtc_1_1failure_a84b3e78c6d7b66c9240a8a6705ebf634} 
+constexpr auto {\bfseries value} () const \&noexcept -\/$>$ const\+\_\+lvalue\+\_\+reference
+\item 
+\Hypertarget{classmtc_1_1failure_a3764dce1aa1e14d26336ef35b9d56715}\label{classmtc_1_1failure_a3764dce1aa1e14d26336ef35b9d56715} 
+constexpr auto {\bfseries value} () \&\&noexcept -\/$>$ rvalue\+\_\+reference
+\item 
+\Hypertarget{classmtc_1_1failure_a4e60e23fd39e8499d3a637bc5351adab}\label{classmtc_1_1failure_a4e60e23fd39e8499d3a637bc5351adab} 
+constexpr auto {\bfseries value} () const \&\&noexcept -\/$>$ const\+\_\+rvalue\+\_\+reference
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classmtc_1_1failure_a65d3ad0b808ae578a08ec9cde8a6adac}\label{classmtc_1_1failure_a65d3ad0b808ae578a08ec9cde8a6adac} 
+{\footnotesize template$<$value\+\_\+type , \mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} $>$ }\\class {\bfseries result}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$\mbox{\hyperlink{classmtc_1_1failure_af13c65d1d3703698049b5888a572d60c}{error\+\_\+type}} E$>$\newline
+class mtc\+::failure$<$ E $>$}
+The {\ttfamily failure\texorpdfstring{$<$}{<}E\texorpdfstring{$>$}{>}} wrapper type wraps a satisfies {\ttfamily error\+\_\+type} E. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+D\+:/\+Development/multicore/include/multicore/result.\+hpp\end{DoxyCompactItemize}

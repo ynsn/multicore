@@ -1,0 +1,39 @@
+\doxysection{mtc\+::awaiter Concept Reference}
+\hypertarget{conceptmtc_1_1awaiter}{}\label{conceptmtc_1_1awaiter}\index{mtc::awaiter@{mtc::awaiter}}
+
+
+The {\ttfamily \doxylink{conceptmtc_1_1awaiter}{mtc\+::awaiter}} concept is satisfied if and only if type {\ttfamily T} is a valid awaiter as defined by the C++20 standard.  
+
+
+
+
+{\ttfamily \#include $<$coroutine.\+hpp$>$}
+
+\doxysubsection{Concept definition}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{template}<\textcolor{keyword}{class}\ T,\ \textcolor{keyword}{class}\ Promise\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{\textcolor{keyword}{concept\ }\mbox{\hyperlink{conceptmtc_1_1awaiter}{mtc::awaiter}}\ =\ \ \textcolor{keyword}{requires}(T\ \&\&a,\ std::coroutine\_handle<Promise>\ handle)\ \{}
+\DoxyCodeLine{\ \ \ \ \{\ a.await\_ready()\ ?\ 1\ :\ 0\ \};}
+\DoxyCodeLine{\ \ \ \ \{\ a.await\_suspend(handle)\ \}\ -\/>\ detail::await\_suspend\_result;}
+\DoxyCodeLine{\ \ \ \ \{\ a.await\_resume()\ \};}
+\DoxyCodeLine{\ \ \}}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Detailed Description}
+The {\ttfamily \doxylink{conceptmtc_1_1awaiter}{mtc\+::awaiter}} concept is satisfied if and only if type {\ttfamily T} is a valid awaiter as defined by the C++20 standard. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type to check. \\
+\hline
+{\em Promise} & The promise type associated with the awaiter. \\
+\hline
+{\em Promise} & The promise type associated with the awaiter. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+\href{https://en.cppreference.com/w/cpp/language/coroutines}{\texttt{ https\+://en.\+cppreference.\+com/w/cpp/language/coroutines}} 
+\end{DoxySeeAlso}

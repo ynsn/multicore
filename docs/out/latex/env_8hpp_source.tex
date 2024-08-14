@@ -1,0 +1,176 @@
+\doxysection{env.\+hpp}
+\hypertarget{env_8hpp_source}{}\label{env_8hpp_source}\index{D:/Development/multicore/include/multicore/env.hpp@{D:/Development/multicore/include/multicore/env.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ (c)\ 2024\ -\/\ present,\ Yoram\ Janssen\ and\ Multicore\ contributors}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Permission\ is\ hereby\ granted,\ free\ of\ charge,\ to\ any\ person\ obtaining}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ a\ copy\ of\ this\ software\ and\ associated\ documentation\ files\ (the}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ "{}Software"{}),\ to\ deal\ in\ the\ Software\ without\ restriction,\ including}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ without\ limitation\ the\ rights\ to\ use,\ copy,\ modify,\ merge,\ publish,}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ distribute,\ sublicense,\ and/or\ sell\ copies\ of\ the\ Software,\ and\ to}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ permit\ persons\ to\ whom\ the\ Software\ is\ furnished\ to\ do\ so,\ subject\ to}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ the\ following\ conditions:}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ The\ above\ copyright\ notice\ and\ this\ permission\ notice\ shall\ be}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ included\ in\ all\ copies\ or\ substantial\ portions\ of\ the\ Software.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ THE\ SOFTWARE\ IS\ PROVIDED\ "{}AS\ IS"{},\ WITHOUT\ WARRANTY\ OF\ ANY\ KIND,}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ EXPRESS\ OR\ IMPLIED,\ INCLUDING\ BUT\ NOT\ LIMITED\ TO\ THE\ WARRANTIES\ OF}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ MERCHANTABILITY,\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ AND}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ NONINFRINGEMENT.\ IN\ NO\ EVENT\ SHALL\ THE\ AUTHORS\ OR\ COPYRIGHT\ HOLDERS\ BE}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ LIABLE\ FOR\ ANY\ CLAIM,\ DAMAGES\ OR\ OTHER\ LIABILITY,\ WHETHER\ IN\ AN\ ACTION}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ OF\ CONTRACT,\ TORT\ OR\ OTHERWISE,\ ARISING\ FROM,\ OUT\ OF\ OR\ IN\ CONNECTION}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ WITH\ THE\ SOFTWARE\ OR\ THE\ USE\ OR\ OTHER\ DEALINGS\ IN\ THE\ SOFTWARE.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ -\/-\/-\/\ Optional\ exception\ to\ the\ license\ -\/-\/-\/}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ As\ an\ exception,\ if,\ as\ a\ result\ of\ your\ compiling\ your\ source\ code,\ portions}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ of\ this\ Software\ are\ embedded\ into\ a\ machine-\/executable\ object\ form\ of\ such}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ source\ code,\ you\ may\ redistribute\ such\ embedded\ portions\ in\ such\ object\ form}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ without\ including\ the\ above\ copyright\ and\ permission\ notices.}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#ifndef\ MTC\_ENV\_HPP}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ MTC\_ENV\_HPP}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}concepts.hpp"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}utility.hpp"{}}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{namespace\ }mtc\ \{}
+\DoxyCodeLine{00043\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00044\ \ \ \textcolor{keyword}{concept\ }queryable\ =\ destructible<T>;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }Query,\ \textcolor{keyword}{class\ }Queryable,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00047\ \ \ \textcolor{keyword}{concept\ }query\_for\ =\ queryable<Queryable>\ \&\&\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ Queryable\&\ obj,\ Args\&\&...\ args)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \{\ obj.query(Query\{\},\ MTC\_FWD(args)...)\ \}\ -\/>\ queryable;}
+\DoxyCodeLine{00049\ \ \ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }Query,\ \textcolor{keyword}{class\ }Queryable,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00052\ \ \ \textcolor{keyword}{concept\ }nothrow\_query\_for\ =\ mtc::queryable<Queryable>\ \&\&\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ Queryable\&\ obj,\ Args\&\&...\ args)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \{\ obj.query(Query\{\},\ MTC\_FWD(args)...)\ \}\ \textcolor{keyword}{noexcept}\ -\/>\ queryable;}
+\DoxyCodeLine{00054\ \ \ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class\ }Query,\ \textcolor{keyword}{class\ }Queryable,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{requires}\ query\_for<Query,\ Queryable,\ Args...>}
+\DoxyCodeLine{00058\ \ \ \textcolor{keyword}{using\ }query\_for\_result\_t\ =\ \textcolor{keyword}{decltype}(declval<Queryable>().query(Query\{\},\ declval<Args>()...));}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \textcolor{keyword}{struct\ }forwarding\_query\_t\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Query>}
+\DoxyCodeLine{00062\ \ \ \ \ \_\_forceinline\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator()(Query\ q)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (query\_for<forwarding\_query\_t,\ Query>)\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(\textcolor{keyword}{noexcept}(q.query(*\textcolor{keyword}{this})),\ \textcolor{stringliteral}{"{}query(forwarding\_query\_t)\ must\ be\ noexcept"{}});}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(same\_as<\textcolor{keyword}{decltype}(q.query(*\textcolor{keyword}{this})),\ \textcolor{keywordtype}{bool}>,\ \textcolor{stringliteral}{"{}query(forwarding\_query\_t)\ must\ return\ a\ bool"{}});}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q.query(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (derived\_from<Query,\ forwarding\_query\_t>)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \textcolor{keyword}{struct\ }query\_or\_t\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Query,\ \textcolor{keyword}{class}\ Queryable,\ \textcolor{keyword}{class}\ Default>}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator()(Query,\ Queryable\&\&,\ Default\&\&\ value)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}(nothrow\_constructible\_from<Default,\ Default\&\&>)\ -\/>\ Default\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MTC\_FWD(value);}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Query,\ \textcolor{keyword}{class}\ Queryable,\ \textcolor{keyword}{class}\ Default>}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \textcolor{keyword}{requires}\ callable<Query,\ Queryable>}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator()(Query\ query,\ Queryable\&\&\ obj,\ Default\&\&)\ const\ noexcept(nothrow\_callable<Query,\ Queryable>)}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ -\/>\ call\_result\_t<Query,\ Queryable>\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MTC\_FWD(query)(MTC\_FWD(obj));}
+\DoxyCodeLine{00086\ \ \ \ \ \}}
+\DoxyCodeLine{00087\ \ \ \};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ forwarding\_query\ =\ forwarding\_query\_t\{\};}
+\DoxyCodeLine{00090\ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ query\_or\ =\ query\_or\_t\{\};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Query,\ \textcolor{keyword}{class}\ Value>}
+\DoxyCodeLine{00093\ \ \ \textcolor{keyword}{struct\ }prop\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{using\ }query\_type\ =\ Query;}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{using\ }value\_type\ =\ Value;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ [[msvc::no\_unique\_address]]\ query\_type\ \_query;}
+\DoxyCodeLine{00098\ \ \ \ \ [[msvc::no\_unique\_address]]\ value\_type\ \_value;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ query(Query)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \_value;\ \}}
+\DoxyCodeLine{00101\ \ \ \};}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Query,\ \textcolor{keyword}{class}\ Value>}
+\DoxyCodeLine{00104\ \ \ prop(Query,\ Value)\ -\/>\ prop<Query,\ std::unwrap\_reference\_t<Value>>;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}...\ Envs>}
+\DoxyCodeLine{00107\ \ \ \textcolor{keyword}{struct\ }env;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00110\ \ \ \textcolor{keyword}{struct\ }env<>\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{constexpr}\ env()\ noexcept\ =\ default;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ template\ <class\ Query>}
+\DoxyCodeLine{00114\ \ \ \ \ constexpr\ auto\ query(Query)\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{void}\ =\ delete;}
+\DoxyCodeLine{00115\ \ \ \};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ template\ <class\ Env,\ class...\ Envs>}
+\DoxyCodeLine{00118\ \ \ struct\ env<Env,\ Envs...>\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ [[msvc::no\_unique\_address]]\ Env\ head;}
+\DoxyCodeLine{00120\ \ \ \ \ [[msvc::no\_unique\_address]]\ env<Envs...>\ tail;}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{explicit}\ env(Env\ h,\ Envs...\ t)\ :\ head\{MTC\_MOVE(h)\},\ tail\{MTC\_MOVE(t)...\}\ \{\}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Query>}
+\DoxyCodeLine{00125\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ query(Query\ query)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keyword}{decltype}(\textcolor{keyword}{auto})\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\textcolor{keyword}{requires}\ \{\ head.query(query);\ \})\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ head.query(query);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tail.query(query);}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00131\ \ \ \ \ \}}
+\DoxyCodeLine{00132\ \ \ \};}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}...\ Envs>}
+\DoxyCodeLine{00135\ \ \ env(Envs...)\ -\/>\ env<std::unwrap\_reference\_t<Envs>...>;}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \textcolor{keyword}{struct\ }with\_t\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Tag,\ \textcolor{keyword}{class}\ Value>}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator()(Tag\ tag,\ Value\&\&\ value)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ prop<Tag,\ Value>\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ prop(tag,\ MTC\_FWD(value));}
+\DoxyCodeLine{00141\ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \ \ \};}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ with\ =\ with\_t\{\};}
+\DoxyCodeLine{00145\ \ \ \textcolor{keyword}{using\ }empty\_env\ =\ env<>;}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \textcolor{keyword}{struct\ }get\_env\_t\ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \textcolor{keyword}{requires}\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ T\&\ obj)\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \{\ obj.get\_env()\ \};}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator()(\textcolor{keyword}{const}\ T\&\ obj)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keyword}{decltype}(obj.get\_env())\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(mtc::queryable<\textcolor{keyword}{decltype}(obj.get\_env())>,\ \textcolor{stringliteral}{"{}get\_env()\ must\ return\ a\ \`{}queryable`\ type"{}});}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(\textcolor{keyword}{noexcept}(obj.get\_env()),\ \textcolor{stringliteral}{"{}get\_env()\ must\ be\ noexcept"{}});}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ obj.get\_env();}
+\DoxyCodeLine{00156\ \ \ \ \ \}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ operator()(\textcolor{keyword}{const}\ T\&\ obj)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ empty\_env\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ empty\_env\{\};}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \ \ \};}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \textcolor{keyword}{inline}\ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ get\_env\ =\ get\_env\_t\{\};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00167\ \ \ \textcolor{keyword}{using\ }env\_of\_t\ =\ call\_result\_t<get\_env\_t,\ T>;}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00170\ \ \ \textcolor{keyword}{concept\ }environment\_provider\ =\ \textcolor{keyword}{requires}(\textcolor{keyword}{const}\ T\&\ obj)\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \{\ get\_env(obj)\ \}\ \textcolor{keyword}{noexcept}\ -\/>\ queryable;}
+\DoxyCodeLine{00172\ \ \ \};}
+\DoxyCodeLine{00173\ \}\ \ \textcolor{comment}{//\ namespace\ mtc}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ MTC\_ENV\_HPP}}
+
+\end{DoxyCode}
