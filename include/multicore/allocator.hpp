@@ -77,27 +77,30 @@ namespace mtc {
   using allocate_result_t = decltype(declval<Allocator>().allocate(declval<size_t>()));
 
   template <allocator Allocator>
-  struct uses_allocator {
+  struct with_allocator {
     [[no_unique_address]] Allocator allocator;
 
     template <class U = Allocator>
       requires std::constructible_from<Allocator, U &&>
     // ReSharper disable once CppNonExplicitConvertingConstructor
-    constexpr uses_allocator(U &&u) noexcept : allocator(MTC_FWD(u)) {}  // NOLINT(*-explicit-constructor)
+    constexpr with_allocator(U &&u) noexcept : allocator(MTC_FWD(u)) {}  // NOLINT(*-explicit-constructor)
   };
 
   template <class... Args>
-  struct used_allocator_in : std::type_identity<void> {};
+  struct allocator_in : std::type_identity<void> {};
   template <class T, class... Args>
-  struct used_allocator_in<uses_allocator<T>, Args...> : std::type_identity<T> {};
+  struct allocator_in<with_allocator<T>, Args...> : std::type_identity<T> {};
   template <class Head, class... Tail>
-  struct used_allocator_in<Head, Tail...> : used_allocator_in<Tail...> {};
+  struct allocator_in<Head, Tail...> : allocator_in<Tail...> {};
 
   template <class... Args>
-  using used_allocator_in_t = typename used_allocator_in<Args...>::type;
+  using allocator_in_t = typename allocator_in<Args...>::type;
 
   template <class... Args>
-  inline constexpr auto using_allocator_v = !std::same_as<used_allocator_in_t<Args...>, void>;
+  inline constexpr auto using_allocator_v = !std::same_as<allocator_in_t<Args...>, void>;
+
+  template <class... Args>
+  concept using_allocator = !std::same_as<allocator_in_t<Args...>, void>;
 
 }  // namespace mtc
 
