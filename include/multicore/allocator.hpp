@@ -48,15 +48,15 @@ namespace mtc {
   concept allocator =
       requires { typename std::remove_cvref_t<Allocator>::value_type; } &&  //
       requires(Allocator &&a, const Allocator &b, Allocator c, size_t n, typename std::remove_cvref_t<Allocator>::value_type *p) {
-        { Allocator(b) } noexcept;                                                                                       // Copy constructible
-        { Allocator(MTC_MOVE(a)) } noexcept;                                                                             // Move constructible
-        { Allocator(MTC_MOVE(c)) } noexcept;                                                                             // Regular constructible
-        { static_cast<Allocator &&>(a) = b } noexcept;                                                                   // Copy assignable
-        { static_cast<Allocator &&>(a) = MTC_MOVE(c) } noexcept;                                                         // Move assignable
-        { static_cast<Allocator &&>(a) == MTC_FWD(a) } noexcept -> std::convertible_to<bool>;                                 // Comparable
-        { static_cast<Allocator &&>(a) != MTC_FWD(a) } noexcept -> std::convertible_to<bool>;                                 // Comparable
-        { static_cast<Allocator &&>(a).allocate(n) } -> std::same_as<typename std::remove_cvref_t<Allocator>::value_type *>;  // `allocate` method
-        { static_cast<Allocator &&>(a).deallocate(p, n) } -> std::same_as<void>;                                              // `deallocate` method
+        { Allocator(b) } noexcept;                                                                          // Copy constructible
+        { Allocator(MTC_MOVE(a)) } noexcept;                                                                // Move constructible
+        { Allocator(MTC_MOVE(c)) } noexcept;                                                                // Regular constructible
+        { MTC_FWD(a) = b } noexcept;                                                                        // Copy assignable
+        { MTC_FWD(a) = MTC_MOVE(c) } noexcept;                                                              // Move assignable
+        { MTC_FWD(a) == MTC_FWD(a) } noexcept -> std::convertible_to<bool>;                                 // Comparable
+        { MTC_FWD(a) != MTC_FWD(a) } noexcept -> std::convertible_to<bool>;                                 // Comparable
+        { MTC_FWD(a).allocate(n) } -> std::same_as<typename std::remove_cvref_t<Allocator>::value_type *>;  // `allocate` method
+        { MTC_FWD(a).deallocate(p, n) } -> std::same_as<void>;                                              // `deallocate` method
       };
 
   /// \ingroup allocator
