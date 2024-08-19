@@ -67,7 +67,7 @@ namespace mtc {
   /// \see mtc::allocator
   /// \see https://en.cppreference.com/w/cpp/named_req/Allocator
   template <class Allocator, class T>
-  concept allocator_for = allocator<Allocator> && std::same_as<T, typename Allocator::value_type>;
+  concept allocator_for = allocator<Allocator> && std::same_as<T, typename std::remove_cvref_t<Allocator>::value_type>;
 
   /// \ingroup allocator
   /// \brief The `mtc::allocate_result_t` alias template is used to get the result type of the `allocate` method of an allocator.
