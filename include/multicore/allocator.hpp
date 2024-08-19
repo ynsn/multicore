@@ -76,6 +76,64 @@ namespace mtc {
   template <allocator Allocator>
   using allocate_result_t = decltype(declval<Allocator>().allocate(declval<size_t>()));
 
+  namespace cpo {
+    struct allocate_t {
+      template <class Allocator>
+        requires allocator<Allocator>
+      constexpr auto operator()(Allocator &&allocator, size_t n) const noexcept(noexcept(MTC_FWD(allocator).allocate(n)))
+          -> allocate_result_t<Allocator> {
+        return MTC_FWD(allocator).allocate(n);
+      }
+    };
+
+    struct deallocate_t {
+      template <class Allocator>
+        requires allocator<Allocator>
+      constexpr auto operator()(Allocator &&allocator, allocate_result_t<Allocator> allocation, size_t n) const
+          noexcept(noexcept(MTC_FWD(allocator).deallocate(allocation, n))) -> void {
+        MTC_FWD(allocator).deallocate(allocation, n);
+      }
+    };
+  }  // namespace cpo
+
+  //---------------------------------------------------------------------------------------------------------------------------------------------
+  /// \name Customization Point Objects
+  /// \brief Customization point objects providing a means to allocate and deallocate memory using allocators.
+  /// @{
+
+  /// \ingroup allocator
+  /// \brief The `allocate` customization point object is used to allocate memory using an allocator.
+  /// \details The `allocate` customization point object is callable as if it is a free function with the following signature:
+  /// \code
+  /// constexpr auto allocate(mtc::allocator auto &&allocator, size_t n);
+  /// \endcode
+  /// \param allocator The allocator to allocate memory with.
+  /// \param n The amount of elements to allocate.
+  /// \return Memory pointer to the allocated memory.
+  /// \note The `allocator` parameter must satisfy the `mtc::allocator` concept.
+  /// \see mtc::allocator
+  /// \hideinitializer
+  inline constexpr auto allocate = cpo::allocate_t{};
+
+  /// \ingroup allocator
+  /// \brief The `deallocate` customization point object is used to deallocate memory using an allocator.
+  /// \details The `deallocate` customization point object is callable as if it is a free function with the following signature:
+  /// \code
+  /// constexpr auto deallocate(mtc::allocator auto &&allocator, auto allocation, size_t n);
+  /// \endcode
+  /// \param allocator The allocator to deallocate memory with.
+  /// \param allocation The memory pointer to deallocate. This is the pointer returned by the `allocate` method of the allocator.
+  /// \param n The amount of elements to deallocate. This is the same value as passed to the `allocate` method.
+  /// \note The `allocator` parameter must satisfy the `mtc::allocator` concept.
+  /// \note The `allocation` parameter must be the result of a call to `mtc::allocate`.
+  /// \note The `n` parameter must be the same value as passed to the `mtc::allocate` method.
+  /// \see mtc::allocator
+  /// \hideinitializer
+  inline constexpr auto deallocate = cpo::deallocate_t{};
+
+  /// @}
+  //---------------------------------------------------------------------------------------------------------------------------------------------
+
   template <allocator Allocator>
   struct with_allocator {
     [[no_unique_address]] Allocator allocator;
