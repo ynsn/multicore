@@ -145,14 +145,20 @@ namespace mtc {
   };
 
   template <class... Args>
-  struct allocator_in : std::type_identity<void> {};
+  struct allocator_in {
+    using allocator_type = void;
+  };
+
   template <class T, class... Args>
-  struct allocator_in<with_allocator<T>, Args...> : std::type_identity<T> {};
+  struct allocator_in<with_allocator<T>, Args...> {
+    using allocator_type = T;
+  };
+
   template <class Head, class... Tail>
   struct allocator_in<Head, Tail...> : allocator_in<Tail...> {};
 
   template <class... Args>
-  using allocator_in_t = typename allocator_in<Args...>::type;
+  using allocator_in_t = typename allocator_in<Args...>::allocator_type;
 
   template <class... Args>
   inline constexpr auto using_allocator_v = !std::same_as<allocator_in_t<Args...>, void>;
