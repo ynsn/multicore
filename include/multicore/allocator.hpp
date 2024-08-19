@@ -160,6 +160,19 @@ namespace mtc {
   template <class... Args>
   using allocator_in_t = typename allocator_in<Args...>::allocator_type;
 
+  template <allocator Allocator, class Arg, class... Args>
+      [[nodiscard]] static constexpr auto allocator_value_in(Arg &&arg, Args &&...args) noexcept -> Allocator {
+    if constexpr (std::same_as<with_allocator<Allocator>, std::decay_t<Arg>>) {
+      return MTC_FWD(arg).allocator;
+    } else {
+      if constexpr (std::is_constructible_v<with_allocator<Allocator>, Arg>) {
+        return with_allocator<Allocator>(arg);
+      } else {
+        return allocator_value_in<Allocator>(MTC_FWD(args)...);
+      }
+    }
+  }
+
   template <class... Args>
   inline constexpr auto using_allocator_v = !std::same_as<allocator_in_t<Args...>, void>;
 
