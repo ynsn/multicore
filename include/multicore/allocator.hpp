@@ -35,6 +35,7 @@
 #include <type_traits>
 
 namespace mtc {
+
   /**
    * \defgroup allocator allocator
    * \brief The `allocator` module provides concepts, types and functions for working with allocators.
@@ -46,15 +47,11 @@ namespace mtc {
   /// \see https://en.cppreference.com/w/cpp/named_req/Allocator
   template <class Allocator>
   concept allocator =
-      requires { typename std::remove_cvref_t<Allocator>::value_type; } &&  //
+      requires { typename std::remove_cvref_t<Allocator>::value_type; } &&  // Has a `value_type` member type.
+      std::copy_constructible<Allocator> &&                                 // Copy constructible.
+      std::move_constructible<Allocator> &&                                 // Move constructible.
+      std::equality_comparable<Allocator> &&                                // Equality comparable.
       requires(Allocator &&a, const Allocator &b, Allocator c, size_t n, typename std::remove_cvref_t<Allocator>::value_type *p) {
-        { Allocator(b) } noexcept;                                                                          // Copy constructible
-        { Allocator(MTC_MOVE(a)) } noexcept;                                                                // Move constructible
-        { Allocator(MTC_MOVE(c)) } noexcept;                                                                // Regular constructible
-        { MTC_FWD(a) = b } noexcept;                                                                        // Copy assignable
-        { MTC_FWD(a) = MTC_MOVE(c) } noexcept;                                                              // Move assignable
-        { MTC_FWD(a) == MTC_FWD(a) } noexcept -> std::convertible_to<bool>;                                 // Comparable
-        { MTC_FWD(a) != MTC_FWD(a) } noexcept -> std::convertible_to<bool>;                                 // Comparable
         { MTC_FWD(a).allocate(n) } -> std::same_as<typename std::remove_cvref_t<Allocator>::value_type *>;  // `allocate` method
         { MTC_FWD(a).deallocate(p, n) } -> std::same_as<void>;                                              // `deallocate` method
       };
@@ -97,7 +94,7 @@ namespace mtc {
   }  // namespace cpo
 
   //---------------------------------------------------------------------------------------------------------------------------------------------
-  /// \name Customization Point Objects
+  /// \name Allocator Customization Point Objects
   /// \brief Customization point objects providing a means to allocate and deallocate memory using allocators.
   /// @{
 
@@ -134,6 +131,9 @@ namespace mtc {
   /// @}
   //---------------------------------------------------------------------------------------------------------------------------------------------
 
+  /// \ingroup allocator
+  /// \brief The `with_allocator` type is used to specify an allocator in a parameter pack/argument list.
+  /// \tparam Allocator The allocator type.
   template <allocator Allocator>
   struct with_allocator {
     [[no_unique_address]] Allocator allocator;
@@ -143,42 +143,6 @@ namespace mtc {
     // ReSharper disable once CppNonExplicitConvertingConstructor
     constexpr with_allocator(U &&u) noexcept : allocator(MTC_FWD(u)) {}  // NOLINT(*-explicit-constructor)
   };
-
-  template <class... Args>
-  struct allocator_in {
-    using allocator_type = void;
-  };
-
-  template <class T, class... Args>
-  struct allocator_in<with_allocator<T>, Args...> {
-    using allocator_type = T;
-  };
-
-  template <class Head, class... Tail>
-  struct allocator_in<Head, Tail...> : allocator_in<Tail...> {};
-
-  template <class... Args>
-  using allocator_in_t = typename allocator_in<Args...>::allocator_type;
-
-  template <allocator Allocator, class Arg, class... Args>
-      [[nodiscard]] static constexpr auto allocator_value_in(Arg &&arg, Args &&...args) noexcept -> Allocator {
-    if constexpr (std::same_as<with_allocator<Allocator>, std::decay_t<Arg>>) {
-      return MTC_FWD(arg).allocator;
-    } else {
-      if constexpr (std::is_constructible_v<with_allocator<Allocator>, Arg>) {
-        return with_allocator<Allocator>(arg);
-      } else {
-        return allocator_value_in<Allocator>(MTC_FWD(args)...);
-      }
-    }
-  }
-
-  template <class... Args>
-  inline constexpr auto using_allocator_v = !std::same_as<allocator_in_t<Args...>, void>;
-
-  template <class... Args>
-  concept using_allocator = !std::same_as<allocator_in_t<Args...>, void>;
-
 }  // namespace mtc
 
 #endif  // MTC_ALLOCATOR_HPP
