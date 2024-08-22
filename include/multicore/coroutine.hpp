@@ -29,10 +29,14 @@
 #ifndef MTC_COROUTINE_HPP
 #define MTC_COROUTINE_HPP
 
-#include "concepts.hpp"
+#include "allocator.hpp"
 #include "utility.hpp"
 
 #include <coroutine>
+#include <cstdio>
+#include <cstdlib>
+#include <memory>
+#include <string>
 
 namespace mtc {
 
@@ -42,13 +46,27 @@ namespace mtc {
    * \todo Add more documentation.
    */
 
+  struct default_coroutine_allocator {
+    using value_type = char;
+
+    friend constexpr auto operator==(default_coroutine_allocator const &, default_coroutine_allocator const &) noexcept -> bool { return true; }
+
+    [[nodiscard]] static auto allocate(const size_t size) -> char * {
+      return static_cast<char *>(malloc(size));
+    }
+
+    static auto deallocate(char *pointer, const size_t size) noexcept -> void {
+      free(pointer);
+    }
+  };
+
   namespace detail {
     template <class T>
     inline constexpr auto is_coroutine_handle_v = false;
     template <class Promise>
     inline constexpr auto is_coroutine_handle_v<std::coroutine_handle<Promise>> = true;
     template <class T>
-    concept await_suspend_result = same_as<T, void> || same_as<T, bool> || is_coroutine_handle_v<T>;
+    concept await_suspend_result = std::same_as<T, void> || std::same_as<T, bool> || is_coroutine_handle_v<T>;
   }  // namespace detail
 
   /// \ingroup coroutine
@@ -72,7 +90,7 @@ namespace mtc {
   /// \see https://en.cppreference.com/w/cpp/language/coroutines
   template <class T, class Result, class Promise = void>
   concept awaiter_of = awaiter<T, Promise> && requires(T &&a) {
-    { a.await_resume() } -> same_as<Result>;
+    { a.await_resume() } -> std::same_as<Result>;
   };
 
   template <class Awaitable>
@@ -111,6 +129,138 @@ namespace mtc {
   template <class Awaitable, class Promise = void>
     requires awaitable<Awaitable, Promise>
   using await_result_t = decltype(as_lvalue(get_awaiter(declval<Awaitable>(), static_cast<Promise *>(nullptr))).await_resume());
+
+  template <class Promise = void>
+  class continuation_handle;
+
+  template <>
+  class continuation_handle<void> {
+   public:
+    constexpr continuation_handle() noexcept = default;
+    template <class Promise>
+    constexpr continuation_handle(std::coroutine_handle<Promise> handle) noexcept : coro(handle) {
+      if constexpr (requires(Promise *promise) { promise.unhandled_stopped(); }) {
+        on_stopped = [](void *address) noexcept -> std::coroutine_handle<> {
+          return std::coroutine_handle<Promise>::from_address(address).promise().unhandled_stopped();
+        };
+      }
+    }
+
+    [[nodiscard]] constexpr auto handle() const noexcept -> std::coroutine_handle<> { return coro; }
+    [[nodiscard]] constexpr auto unhandled_stopped() const noexcept -> std::coroutine_handle<> { return on_stopped(coro.address()); }
+
+   private:
+    using stopped_callback = std::coroutine_handle<> (*)(void *) noexcept;
+
+    [[noreturn]] static auto default_stopped_callback(void *) noexcept -> std::coroutine_handle<> { terminate(); }
+
+    std::coroutine_handle<> coro{};
+    stopped_callback on_stopped{default_stopped_callback};
+  };
+
+  template <class Promise>
+  class continuation_handle {
+   public:
+    constexpr continuation_handle() noexcept = default;
+    constexpr continuation_handle(std::coroutine_handle<Promise> handle) noexcept : hnd(handle) {}
+
+    [[nodiscard]] constexpr auto handle() const noexcept -> std::coroutine_handle<Promise> {
+      return std::coroutine_handle<Promise>::from_address(hnd.handle().address());
+    }
+    [[nodiscard]] constexpr auto unhandled_stopped() const noexcept -> std::coroutine_handle<> { return hnd.unhandled_stopped(); }
+
+   private:
+    continuation_handle<> hnd;
+  };
+
+  struct allocator_aware_coro_t {
+    using allocator_aware_coro_concept = allocator_aware_coro_t;
+  };
+
+  /// \defgroup allocator_aware Allocator Aware Coroutines
+  /// \ingroup coroutine
+  /// \brief multicore provides various helpers and utilities useful when writing or using custom coroutines. This includes the
+  ///      `allocator_aware_coro` concept, which is used to define custom coroutines that are aware of allocators.
+
+  /// \ingroup allocator_aware
+  /// \brief Wow
+  template <class T>
+  concept allocator_aware_coro = requires { typename T::allocator_aware_coro_concept; } &&                               //
+                                 std::derived_from<typename T::allocator_aware_coro_concept, allocator_aware_coro_t> &&  //
+                                 requires { typename T::basic_promise_type; };                                           //
+
+  template <class T>
+  concept coro_allocator = allocator_for<T, char>;
+
+  template <class Promise, class Coroutine, class Allocator>
+  struct allocator_aware_coro_promise : public Promise {
+    using basic_promise_type = Promise;
+    using coroutine_type = Coroutine;
+    using allocator_type = Allocator;
+
+    struct allocator_info {
+      size_t size;
+    };
+
+    template <size_t alignment, typename T>
+    static constexpr T align(T num) {
+      return num + (alignment - 1) & ~(alignment - 1);
+    }
+
+    static constexpr auto allocator_offset = align<alignof(Allocator)>(sizeof(allocator_info));
+    static constexpr auto memory_offset = align<alignof(std::max_align_t)>(allocator_offset + sizeof(Allocator));
+
+    template <class... Args>
+    constexpr auto operator new(size_t size, Args &&...args) noexcept(false) -> void * {
+      auto allocator = mtc::get_value_with_in<with_allocator>(MTC_FWD(args)...).allocator;
+
+      if constexpr (!std::is_empty_v<allocator_type>) {
+        auto *memory_ptr = mtc::allocate(allocator, size + memory_offset);
+        new (reinterpret_cast<void *>(static_cast<char *>(memory_ptr))) allocator_info{size + memory_offset};
+        new (reinterpret_cast<void *>(static_cast<char *>(memory_ptr) + allocator_offset)) allocator_type{allocator};
+
+        return reinterpret_cast<void *>(static_cast<char *>(memory_ptr) + memory_offset);
+      } else {
+        auto *memory_ptr = mtc::allocate(allocator, size);
+        return reinterpret_cast<void *>(memory_ptr);
+      }
+    }
+
+    constexpr auto operator delete(void *pointer, size_t s) noexcept -> void {
+      if constexpr (!std::is_empty_v<Allocator>) {
+        auto *memory_ptr = reinterpret_cast<void *>(static_cast<char *>(pointer) - memory_offset);  // Base pointer
+        auto *allocator_info_ptr = std::launder(reinterpret_cast<allocator_info *>(memory_ptr));    // allocation_info pointer
+        auto *allocator_ptr = std::launder(reinterpret_cast<Allocator *>((char *)memory_ptr + allocator_offset));
+        const auto size = allocator_info_ptr->size;
+
+        Allocator temp_allocator = Allocator{*allocator_ptr};
+        (*allocator_info_ptr).~allocator_info();
+        (*allocator_ptr).~Allocator();
+
+        mtc::deallocate(temp_allocator, static_cast<char *>(memory_ptr), size);
+        temp_allocator.~Allocator();
+      } else {
+        auto *memory_ptr = reinterpret_cast<void *>(static_cast<char *>(pointer));  // Base pointer
+        Allocator temp_allocator = Allocator{};
+        mtc::deallocate(temp_allocator, static_cast<char *>(memory_ptr), s);
+        temp_allocator.~Allocator();
+      }
+    }
+  };
 }  // namespace mtc
+
+namespace std {
+  template <class T, class... Args>
+    requires mtc::allocator_aware_coro<T> && !std::same_as<void, decltype(mtc::get_value_with_in<mtc::with_allocator>(declval<Args>()...))>
+  struct coroutine_traits<T, Args...> {
+    using promise_type = mtc::allocator_aware_coro_promise<typename T::basic_promise_type, T, decltype(mtc::get_value_with_in<mtc::with_allocator>(declval<Args>()...).allocator)>;
+  };
+
+  template <class T, class... Args>
+    requires mtc::allocator_aware_coro<T> //&& !mtc::using_allocator<Args...>
+                                           struct coroutine_traits<T, Args...> {
+    using promise_type = typename T::basic_promise_type;
+  };
+}  // namespace std
 
 #endif  // MTC_COROUTINE_HPP
