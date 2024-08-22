@@ -29,7 +29,6 @@
 #ifndef MTC_CONCEPTS_HPP
 #define MTC_CONCEPTS_HPP
 
-#include "utility.hpp"
 
 #include <concepts>
 #include <type_traits>
@@ -44,7 +43,15 @@ namespace mtc {
   namespace detail {
     template <template <class> class>
     struct template_alias {};
+
+    template <template <class...> class T, class U>
+    inline constexpr auto instance_of_impl = false;
+    template <template <class...> class T, class... Args>
+    inline constexpr auto instance_of_impl<T, T<Args...>> = true;
   }  // namespace detail
+
+  template<class T, template<class...> class Of>
+  concept instance_of = detail::instance_of_impl<Of, T>;
 
   template <class Fn, class... Args>
   concept callable = requires(Fn &&fn, Args &&...args) { static_cast<Fn &&>(fn)(static_cast<Args &&>(args)...); };
@@ -53,9 +60,6 @@ namespace mtc {
   concept nothrow_callable = callable<Fn, Args...> && requires(Fn &&fn, Args &&...args) {
     { static_cast<Fn &&>(fn)(static_cast<Args &&>(args)...) } noexcept;
   };
-
-  template <class Fn, class... Args>
-  using call_result_t = decltype(declval<Fn>()(declval<Args>()...));
 
   template <class T>
   concept boolean_testable = std::convertible_to<T, bool> && requires(T &&t) {
