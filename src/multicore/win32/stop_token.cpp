@@ -26,7 +26,7 @@
 // source code, you may redistribute such embedded portions in such object form
 // without including the above copyright and permission notices.
 
-#include "multicore/stop_token.hpp"
+#include "../../../include/multicore/old/stop_token.hpp"
 
 #include <atomic>
 #include <cassert>

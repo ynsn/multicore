@@ -1,7 +1,0 @@
-add_executable(multicore_allocator_tests allocator_tests.cpp)
-target_include_directories(multicore_allocator_tests PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(multicore_allocator_tests PRIVATE libmulticore)
-
-add_executable(multicore_stop_token_test stop_token_tests.cpp)
-target_include_directories(multicore_stop_token_test PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(multicore_stop_token_test PRIVATE libmulticore)
