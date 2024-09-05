@@ -30,6 +30,7 @@
 #define MTC_COROUTINE_HPP
 
 #include "allocator.hpp"
+#include "memory.hpp"
 #include "utility.hpp"
 
 #include <coroutine>
@@ -49,13 +50,15 @@ namespace mtc {
   struct default_coroutine_allocator {
     using value_type = char;
 
-    friend constexpr auto operator==(default_coroutine_allocator const &, default_coroutine_allocator const &) noexcept -> bool { return true; }
+    friend constexpr auto operator==(const default_coroutine_allocator &, const default_coroutine_allocator &) noexcept -> bool { return true; }
 
     [[nodiscard]] static auto allocate(const size_t size) -> char * {
+      printf("Allocating %zu bytes\n", size);
       return static_cast<char *>(malloc(size));
     }
 
     static auto deallocate(char *pointer, const size_t size) noexcept -> void {
+      printf("Deallocating %zu bytes\n", size);
       free(pointer);
     }
   };
@@ -130,6 +133,27 @@ namespace mtc {
     requires awaitable<Awaitable, Promise>
   using await_result_t = decltype(as_lvalue(get_awaiter(declval<Awaitable>(), static_cast<Promise *>(nullptr))).await_resume());
 
+  class any_awaiter {
+   public:
+    struct type_info {
+      std::string_view name;
+      uint64_t hash;
+      size_t size;
+      size_t alignment;
+    };
+
+   private:
+    struct vtable {
+      any_awaiter::type_info info{};
+      void (*dispatch)(unsigned char *, int, const void *, unsigned char *){};
+    };
+
+    static constexpr vtable empty_vtable = {.info = {"", 0, 0, 0}, .dispatch = +[](unsigned char *, int, const void *, unsigned char *) {}};
+
+    const vtable *vptr{&empty_vtable};
+    mtc::uninitialized_block<8> storage{};
+  };
+
   template <class Promise = void>
   class continuation_handle;
 
@@ -197,13 +221,15 @@ namespace mtc {
     using basic_promise_type = Promise;
     using coroutine_type = Coroutine;
     using allocator_type = Allocator;
+    using basic_promise_type::basic_promise_type;
+    //    using basic_promise_type::await_transform;
 
     struct allocator_info {
       size_t size;
     };
 
     template <size_t alignment, typename T>
-    static constexpr T align(T num) {
+    static constexpr auto align(T num) -> T {
       return num + (alignment - 1) & ~(alignment - 1);
     }
 
@@ -229,8 +255,8 @@ namespace mtc {
     constexpr auto operator delete(void *pointer, size_t s) noexcept -> void {
       if constexpr (!std::is_empty_v<Allocator>) {
         auto *memory_ptr = reinterpret_cast<void *>(static_cast<char *>(pointer) - memory_offset);  // Base pointer
-        auto *allocator_info_ptr = std::launder(reinterpret_cast<allocator_info *>(memory_ptr));    // allocation_info pointer
-        auto *allocator_ptr = std::launder(reinterpret_cast<Allocator *>((char *)memory_ptr + allocator_offset));
+        auto *allocator_info_ptr = std::launder(static_cast<allocator_info *>(memory_ptr));         // allocation_info pointer
+        auto *allocator_ptr = std::launder(reinterpret_cast<Allocator *>(static_cast<char *>(memory_ptr) + allocator_offset));
         const auto size = allocator_info_ptr->size;
 
         Allocator temp_allocator = Allocator{*allocator_ptr};
@@ -251,14 +277,16 @@ namespace mtc {
 
 namespace std {
   template <class T, class... Args>
-    requires mtc::allocator_aware_coro<T> && !std::same_as<void, decltype(mtc::get_value_with_in<mtc::with_allocator>(declval<Args>()...))>
-  struct coroutine_traits<T, Args...> {
-    using promise_type = mtc::allocator_aware_coro_promise<typename T::basic_promise_type, T, decltype(mtc::get_value_with_in<mtc::with_allocator>(declval<Args>()...).allocator)>;
+    requires mtc::allocator_aware_coro<T> &&
+             !std::same_as<mtc::none_t, decltype(mtc::get_value_with_in<mtc::with_allocator>(declval<Args>()...))>
+             struct coroutine_traits<T, Args...> {
+    using promise_type = mtc::allocator_aware_coro_promise<typename T::basic_promise_type, T,
+                                                           decltype(mtc::get_value_with_in<mtc::with_allocator>(declval<Args>()...).allocator)>;
   };
 
   template <class T, class... Args>
-    requires mtc::allocator_aware_coro<T> //&& !mtc::using_allocator<Args...>
-                                           struct coroutine_traits<T, Args...> {
+    requires mtc::allocator_aware_coro<T>  //&& !mtc::using_allocator<Args...>
+  struct coroutine_traits<T, Args...> {
     using promise_type = typename T::basic_promise_type;
   };
 }  // namespace std

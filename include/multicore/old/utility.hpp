@@ -32,6 +32,7 @@
 #include "concepts.hpp"
 
 #include <type_traits>
+#include <string_view>
 
 #define MTC_FWD(...) static_cast<decltype(__VA_ARGS__) &&>(__VA_ARGS__)
 #define MTC_FWD_T(t, ...) static_cast<t &&>(__VA_ARGS__)
@@ -62,6 +63,8 @@ namespace mtc {
 
     template <class>
     inline constexpr auto always_false = false;
+
+
   }  // namespace detail
 
   template <template <class> class>
@@ -99,8 +102,13 @@ namespace mtc {
   template <class Fn, class... Args>
   using call_result_t = decltype(declval<Fn>()(declval<Args>()...));
 
+  struct none_t {};
+  inline constexpr auto none = none_t{};
+
   template <template <class...> class Tag>
-  static constexpr auto get_value_with_in() noexcept -> void {}
+  static constexpr auto get_value_with_in() noexcept -> none_t {
+    return none;
+  }
 
   template <template <class...> class Tag, class Arg, class... Args>
   [[nodiscard]] static constexpr auto get_value_with_in(Arg &&arg, Args &&...args) noexcept -> decltype(auto) {
@@ -121,6 +129,8 @@ namespace mtc {
     constexpr auto operator=(const scope_guard &) -> scope_guard & = delete;
     constexpr auto operator=(scope_guard &&) -> scope_guard & = delete;
   };
+
+
 
 }  // namespace mtc
 

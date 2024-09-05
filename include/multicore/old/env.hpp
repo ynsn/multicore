@@ -30,6 +30,8 @@
 #define MTC_ENV_HPP
 
 #include "concepts.hpp"
+#include "schedulers.hpp"
+#include "stop_token.hpp"
 #include "utility.hpp"
 
 #include <type_traits>
@@ -41,7 +43,7 @@ namespace mtc {
    */
 
   template <class T>
-  concept queryable = destructible<T>;
+  concept queryable = std::destructible<T>;
 
   template <class Query, class Queryable, class... Args>
   concept query_for = queryable<Queryable> && requires(const Queryable& obj, Args&&... args) {
@@ -62,9 +64,9 @@ namespace mtc {
     __forceinline constexpr auto operator()(Query q) const noexcept -> bool {
       if constexpr (query_for<forwarding_query_t, Query>) {
         static_assert(noexcept(q.query(*this)), "query(forwarding_query_t) must be noexcept");
-        static_assert(same_as<decltype(q.query(*this)), bool>, "query(forwarding_query_t) must return a bool");
+        static_assert(std::same_as<decltype(q.query(*this)), bool>, "query(forwarding_query_t) must return a bool");
         return q.query(*this);
-      } else if constexpr (derived_from<Query, forwarding_query_t>) {
+      } else if constexpr (std::derived_from<Query, forwarding_query_t>) {
         return true;
       } else {
         return false;
@@ -74,20 +76,60 @@ namespace mtc {
 
   struct query_or_t {
     template <class Query, class Queryable, class Default>
-    constexpr auto operator()(Query, Queryable&&, Default&& value) const noexcept(nothrow_constructible_from<Default, Default&&>) -> Default {
+    constexpr auto operator()(Query, Queryable&&, Default&& value) const noexcept(std::is_nothrow_constructible_v<Default, Default&&>)
+        -> Default {
       return MTC_FWD(value);
     }
 
     template <class Query, class Queryable, class Default>
       requires callable<Query, Queryable>
-    constexpr auto operator()(Query query, Queryable&& obj, Default&&) const noexcept(nothrow_callable<Query, Queryable>)
-        -> call_result_t<Query, Queryable> {
+    constexpr auto operator()(Query query, Queryable&& obj, Default&&) const noexcept(nothrow_callable<Query, Queryable>) -> decltype(auto) {
       return MTC_FWD(query)(MTC_FWD(obj));
     }
   };
 
+  struct get_allocator_t final {
+    template <class T>
+      requires query_for<get_allocator_t, T>
+    constexpr allocator auto operator()(const T& obj) const noexcept {
+      return obj.query(*this);
+    }
+  };
+
+  struct get_stop_token_t final {
+    template <class T>
+      requires query_for<get_stop_token_t, T>
+    constexpr stoppable_token auto operator()(const T& obj) const noexcept {
+      return obj.query(*this);
+    }
+
+    template <class T>
+    constexpr stoppable_token auto operator()(const T& obj) const noexcept {
+      return never_stop_token{};
+    }
+  };
+
+  struct get_scheduler_t {
+    template <class T>
+      requires query_for<get_scheduler_t,  T>
+    constexpr auto operator()(const T& obj) const noexcept {
+      return obj.query(*this);
+    }
+  };
+
+  /// \name Customization Point Objects
+  /// @{
+
   inline constexpr auto forwarding_query = forwarding_query_t{};
   inline constexpr auto query_or = query_or_t{};
+  inline constexpr auto get_allocator = get_allocator_t{};
+  inline constexpr auto get_stop_token = get_stop_token_t{};
+  inline constexpr auto get_scheduler = get_scheduler_t{};
+
+  /// @}
+
+  template <class T>
+  using stop_token_of_t = std::remove_cvref_t<decltype(get_stop_token(declval<T>()))>;
 
   template <class Query, class Value>
   struct prop {
@@ -138,11 +180,14 @@ namespace mtc {
     template <class Tag, class Value>
     constexpr auto operator()(Tag tag, Value&& value) const noexcept -> prop<Tag, Value> {
       return prop(tag, MTC_FWD(value));
-    }
+    }  // namespace mtc
   };
 
   inline constexpr auto with = with_t{};
   using empty_env = env<>;
+
+  template <class... Args>
+  using make_env_t = env<mtc::prop<Args, Args>...>;
 
   struct get_env_t {
     template <class T>
@@ -169,6 +214,11 @@ namespace mtc {
   template <class T>
   concept environment_provider = requires(const T& obj) {
     { get_env(obj) } noexcept -> queryable;
+  };
+
+  template <class SchedulerProvider>
+  concept scheduler_provider = requires(const SchedulerProvider& obj) {
+    { get_scheduler(obj) } -> scheduler;
   };
 }  // namespace mtc
 
