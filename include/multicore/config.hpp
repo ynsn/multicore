@@ -26,45 +26,11 @@
 // source code, you may redistribute such embedded portions in such object form
 // without including the above copyright and permission notices.
 
-#ifndef MTC_CONCEPTS_HPP
-#define MTC_CONCEPTS_HPP
+#ifndef MTC_CONFIG_HPP
+#define MTC_CONFIG_HPP
 
+#define MTC_FWD(...) static_cast<decltype(__VA_ARGS__) &&>(__VA_ARGS__)
+#define MTC_FWD_T(t, ...) static_cast<t &&>(__VA_ARGS__)
+#define MTC_MOVE(...) static_cast<typename std::remove_reference<decltype(__VA_ARGS__)>::type &&>(__VA_ARGS__)
 
-#include <concepts>
-#include <type_traits>
-
-namespace mtc {
-
-  /**
-   * \defgroup concepts concepts
-   * \brief The `concepts` module provides C++20 concepts comparable to the ones in the standard library.
-   */
-
-  namespace detail {
-    template <template <class> class>
-    struct template_alias {};
-
-    template <template <class...> class T, class U>
-    inline constexpr auto instance_of_impl = false;
-    template <template <class...> class T, class... Args>
-    inline constexpr auto instance_of_impl<T, T<Args...>> = true;
-  }  // namespace detail
-
-  template<class T, template<class...> class Of>
-  concept instance_of = detail::instance_of_impl<Of, T>;
-
-  template <class Fn, class... Args>
-  concept callable = requires(Fn &&fn, Args &&...args) { static_cast<Fn &&>(fn)(static_cast<Args &&>(args)...); };
-
-  template <class Fn, class... Args>
-  concept nothrow_callable = callable<Fn, Args...> && requires(Fn &&fn, Args &&...args) {
-    { static_cast<Fn &&>(fn)(static_cast<Args &&>(args)...) } noexcept;
-  };
-
-  template <class T>
-  concept boolean_testable = std::convertible_to<T, bool> && requires(T &&t) {
-    { !static_cast<T &&>(t) } -> std::convertible_to<bool>;
-  };
-}  // namespace mtc
-
-#endif  // MTC_CONCEPTS_HPP
+#endif //MTC_CONFIG_HPP

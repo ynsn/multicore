@@ -24,14 +24,7 @@ else (DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
 
-add_library(libmulticore STATIC
-        #src/multicore/stop_token.cpp
-        src/multicore/win32/thread.cpp
-)
-target_include_directories(libmulticore PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(libmulticore PRIVATE kernel32 synchronization)
 
 add_executable(multicore main.cpp)
 target_include_directories(multicore PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(multicore PRIVATE libmulticore)
 

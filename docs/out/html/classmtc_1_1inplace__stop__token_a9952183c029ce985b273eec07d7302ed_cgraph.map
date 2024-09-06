@@ -1,7 +1,0 @@
-<map id="mtc::inplace_stop_token::stop_requested" name="mtc::inplace_stop_token::stop_requested">
-<area shape="rect" id="Node000001" title="The stop_requested() method checks if a stop request has been issued." alt="" coords="5,39,169,81"/>
-<area shape="rect" id="Node000002" href="$classmtc_1_1inplace__stop__token.html#a689248ac4dd2f11bc848dc5dce493204" title="The stop_possible() method checks if a stop request can be issued." alt="" coords="220,5,384,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,45,204,39,205,44,170,50"/>
-<area shape="rect" id="Node000003" href="$classmtc_1_1inplace__stop__source.html#ada795e52b771db60e39aa06eedae49e1" title="The stop_requested() method checks if a stop request has been issued." alt="" coords="217,72,387,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,70,201,75,201,80,169,75"/>
-</map>

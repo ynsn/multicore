@@ -73,12 +73,12 @@ namespace mtc {
   using hash_t = uint64_t;
 
   /// \ingroup reflect
-  /// \brief The `mtc::nameof()` function returns the name of the type `T` as a `const char*`.
+  /// \brief The `mtc::nameof` function returns the name of the type `T` as a `const char*`.
   /// \tparam T The type to get the name of.
   /// \return The name of the type `T`.
   template <class T>
-  [[nodiscard]] constexpr auto nameof() noexcept -> mtc::name_t {
-    constexpr auto& name = mtc::detail::tn<T>::value;
+  [[nodiscard]] constexpr auto nameof() noexcept -> const char* {
+    constexpr auto& name = detail::tn<T>::value;
     return name.data();
   }
 
@@ -88,7 +88,7 @@ namespace mtc {
   /// \return The hash of the type `T`.
   template <class T>
   [[nodiscard]] constexpr auto hashof() noexcept -> mtc::hash_t {
-    constexpr auto name = mtc::nameof<T>();  // Get the name of the type.
+    constexpr auto name = nameof<T>();  // Get the name of the type.
     size_t name_len = 0;                     // Calculate the length of the name.
     while (name[name_len] != '\0') {
       ++name_len;

@@ -29,4 +29,8 @@
 #ifndef MULTICORE_HPP
 #define MULTICORE_HPP
 
+#include "multicore/config.hpp"
+#include "multicore/coroutine.hpp"
+#include "multicore/reflect.hpp"
+
 #endif  // MULTICORE_HPP
