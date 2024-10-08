@@ -26,11 +26,29 @@
 // source code, you may redistribute such embedded portions in such object form
 // without including the above copyright and permission notices.
 
-#ifndef MTC_CONFIG_HPP
-#define MTC_CONFIG_HPP
+#ifndef MTC_SCHEDULERS_HPP
+#define MTC_SCHEDULERS_HPP
 
-#define MTC_FWD(...) static_cast<decltype(__VA_ARGS__) &&>(__VA_ARGS__)
-#define MTC_FWD_T(t, ...) static_cast<t &&>(__VA_ARGS__)
-#define MTC_MOVE(...) static_cast<typename std::remove_reference<decltype(__VA_ARGS__)>::type &&>(__VA_ARGS__)
+namespace mtc {
 
-#endif //MTC_CONFIG_HPP
+  namespace cpo {
+    struct schedule_t {
+      template <class Scheduler>
+        requires requires(Scheduler &scheduler) {
+          { scheduler.schedule() };
+        }
+      constexpr auto operator()(Scheduler &scheduler) const noexcept(noexcept(scheduler.schedule())) -> decltype(scheduler.schedule()) {
+        return scheduler.schedule();
+      }
+    };
+  }  // namespace cpo
+
+  inline constexpr auto schedule = mtc::cpo::schedule_t{};
+
+  template <class Scheduler>
+  concept scheduler = requires(Scheduler &scheduler) {
+    { schedule(scheduler) };
+  };
+}  // namespace mtc
+
+#endif  // MTC_SCHEDULERS_HPP

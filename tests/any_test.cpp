@@ -1,4 +1,4 @@
-// Copyright (c) 2024 - present, Yoram Janssen and Multicore contributors
+// Copyright (c) 2024 - present, Yoram Janssen
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,15 +26,38 @@
 // source code, you may redistribute such embedded portions in such object form
 // without including the above copyright and permission notices.
 
-#ifndef MULTICORE_HPP
-#define MULTICORE_HPP
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "multicore/detail/any.hpp"
+#include "doctest/doctest.hpp"
 
-#include "multicore/allocator.hpp"
-#include "multicore/config.hpp"
-#include "multicore/coroutine.hpp"
-#include "multicore/schedulers.hpp"
-//#include "multicore/reflect.hpp"
-//#include "multicore/utility.hpp"
-#include "multicore/utility.hpp"
+struct allocator_interface {
+  template <class B>
+  struct interface : B {
+    auto allocate(size_t n) -> void* { return this->template dispatch<0>(n); }
+  };
 
-#endif  // MULTICORE_HPP
+  template <class T>
+  using vtable_for = mtc::vtable< T, &T::allocate>;
+};
+
+struct dummy_allocator {
+  auto allocate(size_t n) -> void* { return nullptr; }
+};
+
+TEST_CASE("any is empty after construction") {
+  mtc::any<allocator_interface> any_allocator;
+  REQUIRE_FALSE(any_allocator.has_value());
+}
+
+TEST_CASE("any is not empty after emplacement") {
+  mtc::any<allocator_interface> any_allocator;
+  REQUIRE_FALSE(any_allocator.has_value());
+
+  auto* emplacement = any_allocator.emplace<dummy_allocator>();
+  REQUIRE(emplacement != nullptr);
+  REQUIRE(any_allocator.has_value());
+}
+
+TEST_CASE("any can reset and check for value") {
+
+}

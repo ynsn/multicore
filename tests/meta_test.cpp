@@ -1,4 +1,4 @@
-// Copyright (c) 2024 - present, Yoram Janssen and Multicore contributors
+// Copyright (c) 2024 - present, Yoram Janssen
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,15 +26,12 @@
 // source code, you may redistribute such embedded portions in such object form
 // without including the above copyright and permission notices.
 
-#ifndef MULTICORE_HPP
-#define MULTICORE_HPP
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "multicore/detail/any.hpp"
+#include "doctest/doctest.hpp"
 
-#include "multicore/allocator.hpp"
-#include "multicore/config.hpp"
-#include "multicore/coroutine.hpp"
-#include "multicore/schedulers.hpp"
-//#include "multicore/reflect.hpp"
-//#include "multicore/utility.hpp"
-#include "multicore/utility.hpp"
-
-#endif  // MULTICORE_HPP
+TEST_CASE("concept ok always evaluates to true") {
+  REQUIRE(mtc::ok<int>);
+  REQUIRE(mtc::ok<int, float>);
+  REQUIRE(mtc::ok<>);
+}

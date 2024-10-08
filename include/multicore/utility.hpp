@@ -26,15 +26,15 @@
 // source code, you may redistribute such embedded portions in such object form
 // without including the above copyright and permission notices.
 
-#ifndef MULTICORE_HPP
-#define MULTICORE_HPP
+#ifndef MTC_UTILITY_HPP
+#define MTC_UTILITY_HPP
 
-#include "multicore/allocator.hpp"
-#include "multicore/config.hpp"
-#include "multicore/coroutine.hpp"
-#include "multicore/schedulers.hpp"
-//#include "multicore/reflect.hpp"
-//#include "multicore/utility.hpp"
-#include "multicore/utility.hpp"
+/**
+ * \defgroup utility utility
+ * \brief The `utility` module provides utilities for working with the library.
+ */
 
-#endif  // MULTICORE_HPP
+#include "detail/type_info.hpp"
+#include "detail/meta.hpp"
+
+#endif  // MTC_UTILITY_HPP

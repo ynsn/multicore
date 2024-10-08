@@ -2,6 +2,12 @@
 ---
 Language: Cpp
 BasedOnStyle: Google
-ColumnLimit: 145
+ColumnLimit: 165
 NamespaceIndentation: All
 IncludeBlocks: Preserve
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 2
+
+SpacesBeforeTrailingComments: 1
+AllowShortFunctionsOnASingleLine: Inline

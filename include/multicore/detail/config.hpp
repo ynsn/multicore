@@ -1,4 +1,4 @@
-// Copyright (c) 2024 - present, Yoram Janssen and Multicore contributors
+// Copyright (c) 2024 - present, Yoram Janssen
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,15 +26,17 @@
 // source code, you may redistribute such embedded portions in such object form
 // without including the above copyright and permission notices.
 
-#ifndef MULTICORE_HPP
-#define MULTICORE_HPP
+#ifndef MTC_CONFIG_HPP
+#define MTC_CONFIG_HPP
 
-#include "multicore/allocator.hpp"
-#include "multicore/config.hpp"
-#include "multicore/coroutine.hpp"
-#include "multicore/schedulers.hpp"
-//#include "multicore/reflect.hpp"
-//#include "multicore/utility.hpp"
-#include "multicore/utility.hpp"
+#define MTC_FWD(...) static_cast<decltype(__VA_ARGS__) &&>(__VA_ARGS__)
+#define MTC_FWD_T(t, ...) static_cast<t &&>(__VA_ARGS__)
+#define MTC_MOVE(...) static_cast<typename std::remove_reference<decltype(__VA_ARGS__)>::type &&>(__VA_ARGS__)
 
-#endif  // MULTICORE_HPP
+#if defined(_MSC_VER) && !defined(__clang__)
+#define MTC_ALWAYS_INLINE [[mscv::forceinline]]
+#else
+#define MTC_ALWAYS_INLINE inline
+#endif
+
+#endif //MTC_CONFIG_HPP

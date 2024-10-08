@@ -24,7 +24,11 @@ else (DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
 
-
 add_executable(multicore main.cpp)
 target_include_directories(multicore PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+add_executable(mtc_any_test tests/any_test.cpp)
+target_include_directories(mtc_any_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_executable(mtc_meta_test tests/meta_test.cpp)
+target_include_directories(mtc_meta_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)

@@ -29,7 +29,7 @@
 #ifndef MTC_COROUTINE_HPP
 #define MTC_COROUTINE_HPP
 
-#include "config.hpp"
+#include "detail/config.hpp"
 
 #include <coroutine>
 #include <utility>
@@ -64,11 +64,40 @@ namespace mtc {
     concept await_suspend_result = valid_await_suspend_result_type<T>::value;
   }  // namespace detail
 
+
   /// \ingroup coroutine
-  /// \brief The `mtc::awaiter` concept is satisfied if and only if type `T` is a valid awaiter as defined by the C++20 standard.
-  /// \tparam Awaiter The type to check.
-  /// \tparam Promise The promise type associated with the awaiter.
-  /// \see https://en.cppreference.com/w/cpp/language/coroutines
+  /// \brief Concept to check if a type satisfies the requirements of a C++20 awaiter.
+  ///
+  /// The `awaiter` concept is used to determine if a given type `Awaiter` implements the necessary functions
+  /// to be considered a valid C++20 awaiter. An awaiter is a type that can be used with the `co_await` operator
+  /// in coroutines, providing mechanisms to suspend and resume execution.
+  ///
+  /// \tparam Awaiter The type to be checked.
+  /// \tparam Promise The promise type associated with the coroutine, defaulting to `void`.
+  ///
+  /// \details
+  /// The `awaiter` concept requires the type `Awaiter` to implement the following member functions:
+  /// - `await_ready()`: This function should return a value that is contextually convertible to `bool`.
+  /// - `await_suspend(std::coroutine_handle<Promise>)`: This function should return a type that satisfies the
+  ///   `detail::await_suspend_result` concept, which includes `void`, `bool`, or `std::coroutine_handle<Promise>`.
+  /// - `await_resume()`: This function should return the result of the awaited operation.
+  ///
+  /// Example usage:
+  /// \code{.cpp}
+  /// struct MyAwaiter {
+  ///     bool await_ready() { return false; }
+  ///     void await_suspend(std::coroutine_handle<>) {}
+  ///     void await_resume() {}
+  /// };
+  ///
+  /// static_assert(mtc::awaiter<MyAwaiter>, "MyAwaiter does not satisfy the awaiter concept");
+  /// \endcode
+  ///
+  /// In the above example, `MyAwaiter` is a type that satisfies the `awaiter` concept, as it implements the required
+  /// member functions.
+  ///
+  /// \note This concept is part of the `mtc::coroutine` module and is essential for defining custom awaiters
+  ///       that can be used with C++20 coroutines.
   template <class Awaiter, class Promise = void>
   concept awaiter = requires(Awaiter &a, std::coroutine_handle<Promise> handle) {
     { a.await_ready() ? void() : void() };
@@ -77,19 +106,27 @@ namespace mtc {
   };
 
   /// \ingroup coroutine
-  /// \brief The `mtc::awaiter_of` concept is satisfied if and only if type `T` is a valid `mtc::awaiter` that returns the given result
-  /// type.
-  /// \tparam T The type to check.
-  /// \tparam Result The result type to check for.
+  /// \brief The `mtc::awaiter_of` concept is satisfied if and only if type `Awaiter` implements the necessary functions for a valid C++20
+  /// awaiter and the return type of `await_resume` is convertible to `Result`.
+  /// \details An awaiter is a type that implements the necessary functions for a valid C++20 awaiter. An awaiter must implement the following
+  /// member functions:
+  ///  - \code auto await_ready(); \endcode `The return type of this function must be contextually convertible to bool.`
+  ///  - \code auto await_suspend(std::coroutine_handle<void>); \endcode `The return type of this function must be a valid await_suspend result,
+  ///   which is either void, bool, or std::coroutine_handle<Promise>.`
+  ///  - \code auto await_resume(); \endcode `The return type of this function must be the same or convertible to type Result.`
+  ///
+  /// Furthermore, this concept mandates that these member functions are callable on a lvalue of type `Awaiter`.
+  /// \tparam Awaiter The type to check.
+  /// \tparam Result The result type of the awaiter.
   /// \tparam Promise The promise type associated with the awaiter.
   /// \see https://en.cppreference.com/w/cpp/language/coroutines
-  template <class T, class Result, class Promise = void>
-  concept awaiter_of = awaiter<T, Promise> && requires(T &a) {
+  template <class Awaiter, class Result, class Promise = void>
+  concept awaiter_of = awaiter<Awaiter, Promise> && requires(Awaiter &a) {
     { a.await_resume() } -> std::convertible_to<Result>;
   };
 
   template <class Awaitable>
-  static constexpr awaiter decltype(auto) get_awaiter(Awaitable &&awaitable, void * = nullptr) {
+  static constexpr auto get_awaiter(Awaitable &&awaitable, void *promise = nullptr) {
     if constexpr (requires { MTC_FWD(awaitable).operator co_await(); }) {
       return MTC_FWD(awaitable).operator co_await();
     } else if constexpr (requires { operator co_await(MTC_FWD(awaitable)); }) {
@@ -112,14 +149,17 @@ namespace mtc {
     }
   }
 
+  /// \ingroup coroutine
+  /// \brief The `mtc::awaitable` concept is satisfied if and only if type `Awaitable` is a type where `mtc::get_awaiter` can be called on and
+  /// returns a type that satisfies the `mtc::awaiter` concept.
   template <class Awaitable, class Promise = void>
-  concept awaitable = requires(Awaitable &&awaitable, Promise *promise) {
-    { get_awaiter(MTC_FWD(awaitable), promise) } -> awaiter<Promise>;
+  concept awaitable = requires(Awaitable &&a, Promise *p) {
+    { get_awaiter(MTC_FWD(a), p) } -> awaiter<Promise>;
   };
 
   template <class Awaitable, class Result, class Promise = void>
-  concept awaitable_of = requires(Awaitable &&awaitable, Promise *promise) {
-    { get_awaiter(MTC_FWD(awaitable), promise) } -> awaiter_of<Result>;
+  concept awaitable_of = requires(Awaitable &&a, Promise *p) {
+    { get_awaiter(MTC_FWD(a), p) } -> awaiter_of<Result>;
   };
 
   template <class T, class Promise = void>
@@ -140,7 +180,6 @@ namespace mtc {
 
   template <class Awaitable, class Promise = void>
   using await_result_t = typename await_result<Awaitable, Promise>::type;
-
 }  // namespace mtc
 
 #endif  // MTC_COROUTINE_HPP
