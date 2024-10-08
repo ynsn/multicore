@@ -37,6 +37,9 @@ namespace mtc {
    * \brief The `meta` module provides compile-time programming utilities.
    */
 
+  template <class T>
+  constexpr auto declval() noexcept -> T &&;
+
   /// \ingroup meta
   /// \brief Concept that is always satisfied.
   ///
@@ -105,7 +108,7 @@ namespace mtc {
   /// \endcode
   ///
   /// In the above example, `print_indices` prints the indices `0 1 2 3` to the standard output.
-  template <size_t ...Is>
+  template <size_t... Is>
   struct index_sequence {};
 
   namespace detail {
