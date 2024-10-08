@@ -72,10 +72,39 @@ namespace mtc {
                       std::copy_constructible<T> &&                                                                // Copy constructible.
                       std::move_constructible<T> &&                                                                // Move constructible.
                       std::equality_comparable<T> &&                                                               // Equality comparable.
-                      requires(T &&a, const T &b, T c, size_t n, typename std::remove_cvref_t<T>::value_type *p) {
-                        { MTC_FWD(a).allocate(n) } -> std::same_as<typename std::remove_cvref_t<T>::value_type *>; // `allocate` method
-                        { MTC_FWD(a).deallocate(p, n) } -> std::same_as<void>;                                     // `deallocate` method
+                      requires(std::remove_cvref_t<T> &a, size_t n, typename std::remove_cvref_t<T>::value_type *p) {
+                        { a.allocate(n) } -> std::same_as<typename std::remove_cvref_t<T>::value_type *>; // `allocate` method
+                        { a.deallocate(p, n) } -> std::same_as<void>;                                     // `deallocate` method
                       };
+
+  /// \concept mtc::allocator_for
+  /// \ingroup allocator
+  /// \brief Specifies the requirements for a type to be considered an allocator for a specific value type.
+  ///
+  /// The `mtc::allocator_for` concept defines the necessary requirements for a type \p T to qualify as an allocator
+  /// for a specific value type \p For. This concept ensures that the allocator type \p T meets the general allocator
+  /// requirements and that its `value_type` matches the specified type \p For.
+  ///
+  /// \tparam T The type to check for allocator requirements.
+  /// \tparam For The value type that the allocator must support.
+  ///
+  /// \details
+  /// The `mtc::allocator_for` concept ensures that a type \p T meets the following criteria:
+  /// - **Allocator Requirements**: The type \p T must satisfy the `mtc::allocator` concept.
+  /// - **Value Type Match**: The `value_type` member type of \p T must be the same as \p For.
+  ///
+  /// Example usage:
+  /// \code{.cpp}
+  /// static_assert(mtc::allocator_for<std::allocator<int>, int>);
+  /// \endcode
+  ///
+  /// In the above example, `std::allocator<int>` is checked to ensure it satisfies the `mtc::allocator_for` concept
+  /// for the value type `int`.
+  ///
+  /// \note This concept is part of the `[allocator]` module and is used to enforce allocator requirements
+  ///       for specific value types in template parameters.
+  template <class T, class For>
+  concept allocator_for = mtc::allocator<T> && std::same_as<For, typename std::remove_cvref_t<T>::value_type>;
 
 } // namespace mtc
 
